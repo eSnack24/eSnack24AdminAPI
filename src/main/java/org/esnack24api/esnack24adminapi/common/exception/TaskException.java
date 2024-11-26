@@ -1,0 +1,21 @@
+package org.esnack24api.esnack24adminapi.common.exception;
+
+public class TaskException extends RuntimeException {
+
+    private int code;
+    private String message;
+
+    TaskException(String message, int status) {
+        this.message = message;
+        this.code = status;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+}
