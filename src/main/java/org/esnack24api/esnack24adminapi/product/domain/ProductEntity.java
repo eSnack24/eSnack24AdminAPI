@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,8 +23,8 @@ public class ProductEntity {
     private boolean pdelete;
     private String pfilename;
 
-    private Timestamp pregdate;
-    private Timestamp pmoddate;
+    private LocalDateTime pregdate;
+    private LocalDateTime pmoddate;
 
     // ko
     private String ptitle_ko;

@@ -21,11 +21,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+    // 상품 리스트 조회
     @GetMapping("list")
     public ResponseEntity<PageResponse<ProductListDTO>> getProductList(PageRequest pageRequest) {
         log.info("Get ProductList");
 
-        return ResponseEntity.ok(productService.getList(pageRequest));
+        return ResponseEntity.ok(productService.getProductList(pageRequest));
     }
 
 }
