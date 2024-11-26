@@ -1,18 +1,12 @@
 package org.esnack24api.esnack24adminapi.admin.controller;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.dto.*;
-import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.service.AdminService;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
-import org.esnack24api.esnack24adminapi.security.util.JWTUtil;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -50,6 +44,12 @@ public class AdminController {
     public ResponseEntity<String> deleteAdmin(@PathVariable Long admno) {
 
         return ResponseEntity.ok(adminService.deleteAdminService(admno));
+    }
+
+    @GetMapping("get/{admno}")
+    public ResponseEntity<AdminReadDTO> getAdminOne(@PathVariable Long admno) {
+
+        return ResponseEntity.ok(adminService.getAdminOne(admno));
     }
 
     @GetMapping("list")

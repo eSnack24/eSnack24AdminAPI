@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminReadDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminRegisterDTO;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
@@ -106,6 +107,11 @@ public class AdminService {
         }
 
         return "Delete failed";
+    }
+
+    public AdminReadDTO getAdminOne(Long admno) {
+
+        return adminRepository.getAdmin(admno);
     }
 
     public PageResponseDTO<AdminListDTO> getAdminList(PageRequestDTO pageRequestDTO) {

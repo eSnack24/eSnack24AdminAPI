@@ -11,8 +11,6 @@ public class AdminListDTO {
 
     private String admid;
 
-    private String admpw;
-
     private String admrole;
 
     private String admname;

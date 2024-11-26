@@ -4,8 +4,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminDTO;
-import org.esnack24api.esnack24adminapi.admin.dto.TokenRequestDTO;
-import org.esnack24api.esnack24adminapi.admin.dto.TokenResponseDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.token.TokenRequestDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.token.TokenResponseDTO;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.service.AdminService;
 import org.esnack24api.esnack24adminapi.security.util.JWTUtil;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/token")
+@RequestMapping("/api/v1/jwt")
 @RequiredArgsConstructor
 @Log4j2
 public class TokenController {

@@ -43,4 +43,11 @@ public class AdminTests {
 
         adminRepository.adminListByRole("ALL", pageRequestDTO);
     }
+
+    @Test
+    @Transactional
+    public void adminGetOne() {
+
+        adminRepository.getAdmin(2L);
+    }
 }
