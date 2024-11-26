@@ -41,4 +41,10 @@ public class FAQController {
 
         return ResponseEntity.ok(faqService.addFAQ(faqAddDTO));
     }
+
+    @DeleteMapping("delete/{fno}")
+    public ResponseEntity<String> faqDelete(@PathVariable("fno") Long fno){
+        log.info("Deleting faq");
+        return ResponseEntity.ok(faqService.deleteFAQ(fno));
+    }
 }

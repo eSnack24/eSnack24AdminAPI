@@ -57,4 +57,20 @@ public class FAQService {
         return "success add faq";
     }
 
+    public String deleteFAQ(Long fno) {
+
+        Optional<FAQEntity> faq = faqRepository.findById(fno);
+
+        if(faq.isPresent()) {
+
+            faqRepository.delete(faq.get());
+
+            return "Successfully deleted";
+        }
+
+        return "Delete failed";
+    }
+
+
+
 }
