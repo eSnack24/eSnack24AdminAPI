@@ -35,7 +35,7 @@ mybatis:
       enabled: true
 
 org:
-  hyeong:
+  zerock:
     accessTime: 5
     refreshTime: 10080
     alwaysNew: true
