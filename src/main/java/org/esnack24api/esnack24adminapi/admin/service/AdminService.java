@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminReadDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminRegisterDTO;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.exception.CommonExceptions;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,6 +58,7 @@ public class AdminService {
                 .admid(adminRegisterDTO.getAdmid())
                 .admpw(passwordEncoder.encode(adminRegisterDTO.getAdmpw()))
                 .admrole(adminRegisterDTO.getAdmrole())
+                .admname(adminRegisterDTO.getAdmname())
                 .build();
 
         adminRepository.save(admin);
@@ -77,6 +82,9 @@ public class AdminService {
             if (adminDTO.getAdmrole() != null) {
                 adminEntity.setAdmrole(adminDTO.getAdmrole());
             }
+            if (adminDTO.getAdmname() != null) {
+                adminEntity.setAdmname(adminDTO.getAdmname());
+            }
 
             adminRepository.save(adminEntity);
 
@@ -99,5 +107,20 @@ public class AdminService {
         }
 
         return "Delete failed";
+    }
+
+    public AdminReadDTO getAdminOne(Long admno) {
+
+        return adminRepository.getAdmin(admno);
+    }
+
+    public PageResponseDTO<AdminListDTO> getAdminList(PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminList(pageRequestDTO);
+    }
+
+    public PageResponseDTO<AdminListDTO> getAdminListByRole(String role, PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminListByRole(role, pageRequestDTO);
     }
 }

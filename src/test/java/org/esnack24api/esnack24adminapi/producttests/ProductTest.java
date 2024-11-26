@@ -3,8 +3,10 @@ package org.esnack24api.esnack24adminapi.producttests;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
+import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
 import org.esnack24api.esnack24adminapi.product.repository.ProductRepository;
+import org.esnack24api.esnack24adminapi.product.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,18 +21,19 @@ public class ProductTest {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductService productService;
 
-    // product 조회 테스트
+    // 상품 목록 조회 테스트
     @Test
     @Transactional
     @Commit
     public void testProductList() {
-
         PageRequest pageRequest = new PageRequest();
-
         PageResponse<ProductListDTO> productList = productRepository.listProductAll(pageRequest);
-
         log.info(productList);
     }
+
+    // 상품 상세 조회 테스트
 
 }
