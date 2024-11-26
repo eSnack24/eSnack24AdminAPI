@@ -22,7 +22,7 @@ public class AdminEntity {
 
     private String admpw;
 
-    private AdminRole admrole;
+    private String admrole;
 
     private boolean admdelete;
 
