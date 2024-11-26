@@ -2,6 +2,7 @@ package org.esnack24api.esnack24adminapi.customersupport.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 
 @Setter
 @Entity
@@ -10,7 +11,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"admno"})
 public class FAQEntity {
 
     @Id
@@ -19,7 +19,7 @@ public class FAQEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="admno")
-    private adminEntity admno;
+    private AdminEntity admin;
 
     private String ftitle;
 

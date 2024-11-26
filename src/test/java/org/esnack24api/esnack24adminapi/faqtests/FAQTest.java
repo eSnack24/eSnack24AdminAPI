@@ -2,6 +2,7 @@ package org.esnack24api.esnack24adminapi.faqtests;
 
 
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.customersupport.dto.FAQDetailDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.FAQListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.repository.FAQRepository;
 import org.junit.jupiter.api.Test;
@@ -32,4 +33,18 @@ public class FAQTest {
 
 
     }
+
+    @Test
+    @Transactional
+    @Commit
+    public void testDetailFAQ() {
+
+        FAQDetailDTO List = faqRepository.detailFAQ(Long.valueOf(2));
+
+        log.info(List);
+
+
+    }
+
+
 }
