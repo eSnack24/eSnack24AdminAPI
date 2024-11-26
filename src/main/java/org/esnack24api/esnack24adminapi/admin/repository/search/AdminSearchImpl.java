@@ -1,6 +1,6 @@
 package org.esnack24api.esnack24adminapi.admin.repository.search;
 
-import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -22,6 +20,32 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
 
     public AdminSearchImpl() {
         super(AdminEntity.class);
+    }
+
+    private PageResponseDTO<AdminListDTO> returnRoleListDTO(
+            QAdminEntity admin, JPQLQuery<AdminEntity> query, PageRequestDTO pageRequestDTO) {
+
+        JPQLQuery<AdminListDTO> tupleQuery = query.select(
+                Projections.bean(AdminListDTO.class,
+                        admin.admno,
+                        admin.admid,
+                        admin.admpw,
+                        admin.admrole,
+                        admin.admname,
+                        admin.admregdate,
+                        admin.admmoddate
+                )
+        );
+
+        List<AdminListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<AdminListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
     }
 
 
@@ -42,53 +66,27 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
 
         this.getQuerydsl().applyPagination(pageable, query);
 
-        JPQLQuery<Tuple> tupleQuery =
-                query.select(
-                        admin.admno,
-                        admin.admid,
-                        admin.admpw,
-                        admin.admregdate,
-                        admin.admmoddate,
-                        admin.admrole
-                );
+        return returnRoleListDTO(admin, query, pageRequestDTO);
+    }
 
-        List<Tuple> tupleList = tupleQuery.fetch();
+    @Override
+    public PageResponseDTO<AdminListDTO> adminListByRole(String role, PageRequestDTO pageRequestDTO) {
 
-        log.info(tupleList);
+        Pageable pageable =
+                PageRequest.of(pageRequestDTO.getPage() - 1,
+                        pageRequestDTO.getSize(),
+                        Sort.by("admno").ascending());
 
-        if(tupleList.isEmpty()) {
-            return null;
-        }
+        QAdminEntity admin = QAdminEntity.adminEntity;
 
-        List<AdminListDTO> dtoList = new ArrayList<>();
+        JPQLQuery<AdminEntity> query = from(admin);
 
-        tupleList.forEach(t -> {
+        query.where(admin.admno.gt(0));
+        query.where(admin.admrole.eq(role));
+        query.where(admin.admdelete.isFalse());
 
-            Long admno = t.get(admin.admno);
-            String admid = t.get(admin.admid);
-            String admpw = t.get(admin.admpw);
-            Timestamp admregdate = t.get(admin.admregdate);
-            Timestamp admmoddate = t.get(admin.admmoddate);
-            String admrole = t.get(admin.admrole);
+        this.getQuerydsl().applyPagination(pageable, query);
 
-
-            AdminListDTO dto = new AdminListDTO();
-            dto.setAdmno(admno);
-            dto.setAdmid(admid);
-            dto.setAdmpw(admpw);
-            dto.setAdmrole(admrole);
-            dto.setAdmregdate(admregdate);
-            dto.setAdmmoddate(admmoddate);
-
-            dtoList.add(dto);
-        });
-
-        long total = query.fetchCount();
-
-        return PageResponseDTO.<AdminListDTO>withAll()
-                .dtoList(dtoList)
-                .totalCount(total)
-                .pageRequestDTO(pageRequestDTO)
-                .build();
+        return returnRoleListDTO(admin, query, pageRequestDTO);
     }
 }

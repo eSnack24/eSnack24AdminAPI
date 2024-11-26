@@ -15,6 +15,8 @@ public class AdminListDTO {
 
     private String admrole;
 
+    private String admname;
+
     private Timestamp admregdate;
 
     private Timestamp admmoddate;

@@ -7,4 +7,6 @@ import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 public interface AdminSearch {
 
     PageResponseDTO<AdminListDTO> adminList(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<AdminListDTO> adminListByRole(String role, PageRequestDTO pageRequestDTO);
 }

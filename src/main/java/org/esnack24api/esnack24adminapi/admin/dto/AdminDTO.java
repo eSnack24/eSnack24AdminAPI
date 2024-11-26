@@ -9,6 +9,8 @@ public class AdminDTO {
 
     private String admid;
 
+    private String admname;
+
     private String admpw;
 
     private String admrole;

@@ -11,4 +11,6 @@ public class AdminRegisterDTO {
     private String admpw;
 
     private String admrole;
+
+    private String admname;
 }

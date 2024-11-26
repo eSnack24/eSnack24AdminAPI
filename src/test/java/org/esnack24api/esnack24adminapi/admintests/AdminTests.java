@@ -31,4 +31,16 @@ public class AdminTests {
 
         adminRepository.adminList(pageRequestDTO);
     }
+
+    @Test
+    @Transactional
+    public void adminRoleListTest() {
+
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+
+        pageRequestDTO.setPage(1);
+        pageRequestDTO.setSize(10);
+
+        adminRepository.adminListByRole("ALL", pageRequestDTO);
+    }
 }

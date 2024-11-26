@@ -11,8 +11,6 @@ import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.exception.CommonExceptions;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +57,7 @@ public class AdminService {
                 .admid(adminRegisterDTO.getAdmid())
                 .admpw(passwordEncoder.encode(adminRegisterDTO.getAdmpw()))
                 .admrole(adminRegisterDTO.getAdmrole())
+                .admname(adminRegisterDTO.getAdmname())
                 .build();
 
         adminRepository.save(admin);
@@ -81,6 +80,9 @@ public class AdminService {
             }
             if (adminDTO.getAdmrole() != null) {
                 adminEntity.setAdmrole(adminDTO.getAdmrole());
+            }
+            if (adminDTO.getAdmname() != null) {
+                adminEntity.setAdmname(adminDTO.getAdmname());
             }
 
             adminRepository.save(adminEntity);
@@ -109,5 +111,10 @@ public class AdminService {
     public PageResponseDTO<AdminListDTO> getAdminList(PageRequestDTO pageRequestDTO) {
 
         return adminRepository.adminList(pageRequestDTO);
+    }
+
+    public PageResponseDTO<AdminListDTO> getAdminListByRole(String role, PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminListByRole(role, pageRequestDTO);
     }
 }
