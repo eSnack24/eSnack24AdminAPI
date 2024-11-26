@@ -4,10 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminRegisterDTO;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.exception.CommonExceptions;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,5 +104,10 @@ public class AdminService {
         }
 
         return "Delete failed";
+    }
+
+    public PageResponseDTO<AdminListDTO> getAdminList(PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminList(pageRequestDTO);
     }
 }

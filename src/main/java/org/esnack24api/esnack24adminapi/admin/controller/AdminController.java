@@ -8,8 +8,12 @@ import org.esnack24api.esnack24adminapi.admin.dto.*;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
 import org.esnack24api.esnack24adminapi.admin.service.AdminService;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.security.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -60,6 +64,14 @@ public class AdminController {
     public ResponseEntity<String> deleteAdmin(@PathVariable Long admno) {
 
         return ResponseEntity.ok(adminService.deleteAdminService(admno));
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<PageResponseDTO<AdminListDTO>> allAdminList(
+            PageRequestDTO pageRequestDTO
+    ) {
+
+        return ResponseEntity.ok(adminService.getAdminList(pageRequestDTO));
     }
 
     @PostMapping("makeToken")
