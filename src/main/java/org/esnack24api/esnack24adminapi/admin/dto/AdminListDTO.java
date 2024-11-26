@@ -1,10 +1,13 @@
 package org.esnack24api.esnack24adminapi.admin.dto;
 
 import lombok.Data;
-import org.esnack24api.esnack24adminapi.admin.domain.AdminRole;
+
+import java.sql.Timestamp;
 
 @Data
-public class AdminRegisterDTO {
+public class AdminListDTO {
+
+    private Long admno;
 
     private String admid;
 
@@ -13,4 +16,8 @@ public class AdminRegisterDTO {
     private String admrole;
 
     private String admname;
+
+    private Timestamp admregdate;
+
+    private Timestamp admmoddate;
 }

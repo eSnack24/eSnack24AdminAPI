@@ -9,5 +9,7 @@ public class AdminEditDTO {
 
     private String admpw;
 
+    private String admname;
+
     private String admrole;
 }

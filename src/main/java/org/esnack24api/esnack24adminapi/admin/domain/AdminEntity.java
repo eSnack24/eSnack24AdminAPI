@@ -22,6 +22,8 @@ public class AdminEntity {
 
     private String admpw;
 
+    private String admname;
+
     private String admrole;
 
     private boolean admdelete;
