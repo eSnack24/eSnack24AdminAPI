@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.domain.QAdminEntity;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminReadDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,11 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
         super(AdminEntity.class);
     }
 
+    @Override
+    public AdminReadDTO getAdmin(Long admno) {
+        return null;
+    }
+
     private PageResponseDTO<AdminListDTO> returnRoleListDTO(
             QAdminEntity admin, JPQLQuery<AdminEntity> query, PageRequestDTO pageRequestDTO) {
 
@@ -29,7 +35,6 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
                 Projections.bean(AdminListDTO.class,
                         admin.admno,
                         admin.admid,
-                        admin.admpw,
                         admin.admrole,
                         admin.admname,
                         admin.admregdate,

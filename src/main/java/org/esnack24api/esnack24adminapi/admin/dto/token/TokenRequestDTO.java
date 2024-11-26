@@ -1,4 +1,4 @@
-package org.esnack24api.esnack24adminapi.admin.dto;
+package org.esnack24api.esnack24adminapi.admin.dto.token;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
