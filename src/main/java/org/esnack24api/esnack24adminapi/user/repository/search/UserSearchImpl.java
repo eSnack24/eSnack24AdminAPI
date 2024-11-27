@@ -5,12 +5,15 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.user.domain.QAllergyUserEntity;
 import org.esnack24api.esnack24adminapi.user.domain.QUserAllergyEntity;
 import org.esnack24api.esnack24adminapi.user.domain.QUserEntity;
 import org.esnack24api.esnack24adminapi.user.domain.UserEntity;
 import org.esnack24api.esnack24adminapi.user.dto.UserDTO;
 import org.esnack24api.esnack24adminapi.user.dto.UserDetailDTO;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.ArrayList;
@@ -26,11 +29,14 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
     }
 
     @Override
-    public List<UserDTO> getUserList(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserDTO> getUserList(PageRequestDTO pageRequestDTO) {
 
         QUserEntity user = QUserEntity.userEntity;
         QUserAllergyEntity userAllergy = QUserAllergyEntity.userAllergyEntity;
         QAllergyUserEntity allergy = QAllergyUserEntity.allergyUserEntity;
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
 
         JPQLQuery<Tuple> query = from(user)
                 .leftJoin(userAllergy).on(user.uno.eq(userAllergy.user.uno))
@@ -38,7 +44,11 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
                 .select(user.uno, user.username, user.uemail, user.ucallnumber,
                         user.ubirth, user.udelete, allergy.atitle_ko);
 
+        this.getQuerydsl().applyPagination(pageable, query);
+
+
         List<Tuple> result = query.fetch();
+
 
         Map<Long, UserDTO> userMap = new HashMap<>();
 
@@ -55,16 +65,23 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
                 return dto;
             });
 
-
             String allergyTitle = row.get(allergy.atitle_ko);
             if (allergyTitle != null) {
                 userDTO.getAllergyList().add(allergyTitle);
             }
         }
 
+        // 총 데이터 개수 조회
+        long totalCount = query.fetchCount();
 
-        return new ArrayList<>(userMap.values());
+        // PageResponseDTO 반환
+        return PageResponseDTO.<UserDTO>withAll()
+                .dtoList(new ArrayList<>(userMap.values()))
+                .totalCount(totalCount)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
     }
+
 
 
 
