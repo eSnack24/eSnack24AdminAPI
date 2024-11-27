@@ -105,6 +105,7 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
         query.leftJoin(qna).on(qna.admin.eq(admin));
 
         query.where(admin.admno.gt(0));
+        query.where(admin.admdelete.isFalse());
 
         query.groupBy(admin);
 
