@@ -12,6 +12,7 @@ import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
 import org.esnack24api.esnack24adminapi.product.domain.QProductAllergyEntity;
 import org.esnack24api.esnack24adminapi.product.domain.QProductEntity;
 import org.esnack24api.esnack24adminapi.product.dto.ProductAllergyListDTO;
+import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -99,6 +100,48 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .total((int) total)
                 .pageRequest(pageRequest)
                 .build();
+    }
+
+    // 제품 상세 조회
+    @Override
+    public ProductDetailDTO getProductOne(Long pno) {
+        QProductEntity product = QProductEntity.productEntity;
+        QProductAllergyEntity productAllergy = QProductAllergyEntity.productAllergyEntity;
+        QAllergyEntity allergy = QAllergyEntity.allergyEntity;
+
+        StringTemplate allergyInfo = Expressions.stringTemplate(
+                "group_concat({0})",
+                allergy.atitle_ko
+        );
+
+        return from(product)
+                .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
+                .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
+                .where(product.pno.eq(pno))
+                .groupBy(product.pno)
+                .select(Projections.constructor(ProductDetailDTO.class,
+                        product.pno,
+                        product.price,
+                        product.pqty,
+                        product.pdelete,
+                        product.pfilename,
+                        product.pregdate,
+                        product.pmoddate,
+                        product.ptitle_ko,
+                        product.pcontent_ko,
+                        product.pcategory_ko,
+                        product.ptitle_en,
+                        product.ptitle_ja,
+                        product.ptitle_zh,
+                        product.pcontent_en,
+                        product.pcontent_ja,
+                        product.pcontent_zh,
+                        product.pcategory_en,
+                        product.pcategory_ja,
+                        product.pcategory_zh,
+                        allergyInfo
+                ))
+                .fetchOne();
     }
 
 

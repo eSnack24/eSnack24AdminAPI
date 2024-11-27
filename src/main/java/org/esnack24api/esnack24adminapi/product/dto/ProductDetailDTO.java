@@ -1,9 +1,16 @@
 package org.esnack24api.esnack24adminapi.product.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDetailDTO {
 
     private Long pno;
@@ -29,5 +36,5 @@ public class ProductDetailDTO {
     private String pcategory_ja;
     private String pcategory_zh;
 
-
+    private String allergyInfo;
 }
