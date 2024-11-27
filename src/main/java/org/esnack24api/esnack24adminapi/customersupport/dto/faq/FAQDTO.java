@@ -1,4 +1,4 @@
-package org.esnack24api.esnack24adminapi.customersupport.dto;
+package org.esnack24api.esnack24adminapi.customersupport.dto.faq;
 
 import lombok.Data;
 

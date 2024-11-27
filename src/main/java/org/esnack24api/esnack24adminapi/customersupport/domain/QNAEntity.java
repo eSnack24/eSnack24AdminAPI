@@ -43,31 +43,10 @@ public class QNAEntity {
     private String qanswer;
     private String qfilename;
 
-    @Builder.Default
     private boolean qdelete = false;
-
-    @Builder.Default
     private boolean qstatus = false;
 
-    @CreatedDate
     private LocalDateTime qregdate;
-
-    @LastModifiedDate
     private LocalDateTime qmoddate;
 
-    // 수정 메서드
-    public void updateQNA(String qtitle, String qcontent, String qfilename) {
-        this.qtitle = qtitle;
-        this.qcontent = qcontent;
-        this.qfilename = qfilename;
-    }
-
-    // 삭제 메서드
-    public void deleteQNA() {
-        this.qdelete = true;
-    }
-
-    public boolean getQstatus() {
-        return this.qstatus;
-    }
 }

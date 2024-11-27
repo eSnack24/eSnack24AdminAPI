@@ -1,9 +1,7 @@
 package org.esnack24api.esnack24adminapi.customersupport.repository.search;
 
-import org.esnack24api.esnack24adminapi.customersupport.domain.FAQEntity;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQAddDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQDetailDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQDetailDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQListDTO;
 
 import java.util.List;
 
