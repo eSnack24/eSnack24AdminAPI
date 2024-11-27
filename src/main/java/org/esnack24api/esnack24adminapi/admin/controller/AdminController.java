@@ -9,8 +9,6 @@ import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
@@ -18,7 +16,6 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
-
 
     @PostMapping("add")
     public ResponseEntity<String> registerAdmin(@RequestBody AdminRegisterDTO adminRegisterDTO) {
