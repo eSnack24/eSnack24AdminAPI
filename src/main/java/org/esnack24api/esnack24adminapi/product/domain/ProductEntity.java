@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,8 +24,8 @@ public class ProductEntity {
     private boolean pdelete;
     private String pfilename;
 
-    private LocalDateTime pregdate;
-    private LocalDateTime pmoddate;
+    private Timestamp pregdate;
+    private Timestamp pmoddate;
 
     // ko
     private String ptitle_ko;
@@ -45,5 +46,9 @@ public class ProductEntity {
     private String ptitle_zh;
     private String pcontent_zh;
     private String pcategory_zh;
+
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductAllergyEntity> productAllergies;
 
 }

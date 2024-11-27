@@ -1,9 +1,7 @@
 package org.esnack24api.esnack24adminapi.product.dto;
 
 import lombok.Data;
-
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 public class ProductDetailDTO {
@@ -14,8 +12,8 @@ public class ProductDetailDTO {
     private boolean pdelete;
     private String pfilename;
 
-    private LocalDateTime pregdate;
-    private LocalDateTime pmoddate;
+    private Timestamp pregdate;
+    private Timestamp pmoddate;
 
     private String ptitle_ko;
     private String pcontent_ko;
