@@ -2,6 +2,7 @@ package org.esnack24api.esnack24adminapi.customersupport.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
 import org.esnack24api.esnack24adminapi.user.domain.UserEntity;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @ToString(exclude = {"product", "user"})
 @Table(name = "tbl_qna")
 public class QNAEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qno;
@@ -31,6 +33,10 @@ public class QNAEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pno")
     private ProductEntity product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admno")
+    private AdminEntity admin;
 
     private String qtitle;
     private String qcontent;
