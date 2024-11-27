@@ -7,9 +7,11 @@ import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.domain.QAllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.dto.AllergyCrudDTO;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class AllergySearchImpl extends QuerydslRepositorySupport implements AllergySearch {
 
     private final JPAQueryFactory queryFactory;
