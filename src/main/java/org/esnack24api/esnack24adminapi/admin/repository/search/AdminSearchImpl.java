@@ -9,6 +9,7 @@ import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminWorkListDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
+import org.esnack24api.esnack24adminapi.customersupport.domain.QQNAEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -99,6 +100,10 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
                         Sort.by("admno").ascending());
 
         QAdminEntity admin = QAdminEntity.adminEntity;
+        QQNAEntity qna = QQNAEntity.qNAEntity;
+
+        JPQLQuery<AdminEntity> query = from(admin);
+        query.leftJoin(qna).on();
 
         return null;
     }
