@@ -37,7 +37,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.editAdminService(dto));
     }
 
-    @DeleteMapping("delete/{admno}")
+    @PutMapping("delete/{admno}")
     public ResponseEntity<String> deleteAdmin(@PathVariable Long admno) {
 
         return ResponseEntity.ok(adminService.deleteAdminService(admno));
