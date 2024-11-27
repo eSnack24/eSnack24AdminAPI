@@ -64,7 +64,9 @@ public class FAQService {
 
         if(faq.isPresent()) {
 
-            faqRepository.delete(faq.get());
+            FAQEntity faqEntity = faq.get();
+
+            faqEntity.setFdelete(true);
 
             return "Successfully deleted";
         }

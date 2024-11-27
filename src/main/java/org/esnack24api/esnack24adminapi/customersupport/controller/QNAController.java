@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNADetailDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAAnswerDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.service.QNAService;
@@ -24,6 +25,20 @@ public class QNAController {
 
         return ResponseEntity.ok(qnaService.QNAList(pageRequestDTO));
 
+    }
+
+    @GetMapping("detail/{qno}")
+    public ResponseEntity<QNADetailDTO> getQNADetail(@PathVariable("qno") Long qno) {
+        log.info("getQNADetail");
+
+        return ResponseEntity.ok(qnaService.QNADetail(qno));
+    }
+
+    @PutMapping("delete/{qno}")
+    public ResponseEntity<String> deleteQNA(@PathVariable("qno") Long qno) {
+        log.info("deleteQNA");
+
+        return ResponseEntity.ok(qnaService.QNADelete(qno));
     }
 
     @PutMapping("answer/{admno}")
