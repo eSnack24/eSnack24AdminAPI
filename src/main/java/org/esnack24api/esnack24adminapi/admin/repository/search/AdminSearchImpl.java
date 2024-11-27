@@ -100,7 +100,6 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
 
         QAdminEntity admin = QAdminEntity.adminEntity;
 
-
         return null;
     }
 }
