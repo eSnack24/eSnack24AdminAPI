@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("admin/api/v1/user")
 @Log4j2
 @RequiredArgsConstructor
 public class UserController {
@@ -27,7 +27,6 @@ public class UserController {
     private final UserService userService;
 
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("list")
     public ResponseEntity<List<UserDTO>> userLists(@Validated PageRequestDTO pageRequestDTO){
 

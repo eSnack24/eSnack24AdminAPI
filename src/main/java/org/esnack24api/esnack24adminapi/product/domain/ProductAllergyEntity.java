@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.esnack24api.esnack24adminapi.allergy.domain.Allergy2Entity;
+import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 
 @Entity
 @Builder
@@ -21,7 +21,7 @@ public class ProductAllergyEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ano")
-    private Allergy2Entity allergy;
+    private AllergyEntity allergy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pno")

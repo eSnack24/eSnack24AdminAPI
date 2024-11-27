@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Table(name = "tbl_allergy")
-public class Allergy2Entity {
+public class AllergyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

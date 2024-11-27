@@ -2,7 +2,7 @@ package org.esnack24api.esnack24adminapi.allergy.repository.search;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.esnack24api.esnack24adminapi.allergy.domain.Allergy2Entity;
+import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.domain.QAllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.dto.AllergyCrudDTO;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -14,7 +14,7 @@ public class AllergySearchImpl extends QuerydslRepositorySupport implements Alle
     private final JPAQueryFactory queryFactory;
 
     public AllergySearchImpl(JPAQueryFactory queryFactory) {
-        super(Allergy2Entity.class);
+        super(AllergyEntity.class);
         this.queryFactory = queryFactory;
     }
 

@@ -10,18 +10,18 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "tbl_user_allergy")
-public class UserAllergyEntity {
+@Table(name = "tbl_address")
+public class UserCountryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uano;
+    private Long adno;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uno")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ano")
-    private AllergyUserEntity allergy;
+    private String country;
+
+
 }

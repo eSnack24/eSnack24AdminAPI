@@ -5,7 +5,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
-import org.esnack24api.esnack24adminapi.user.domain.QAllergyEntity;
+import org.esnack24api.esnack24adminapi.user.domain.QAllergyUserEntity;
 import org.esnack24api.esnack24adminapi.user.domain.QUserAllergyEntity;
 import org.esnack24api.esnack24adminapi.user.domain.QUserEntity;
 import org.esnack24api.esnack24adminapi.user.domain.UserEntity;
@@ -30,7 +30,7 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
 
         QUserEntity user = QUserEntity.userEntity;
         QUserAllergyEntity userAllergy = QUserAllergyEntity.userAllergyEntity;
-        QAllergyEntity allergy = QAllergyEntity.allergyEntity;
+        QAllergyUserEntity allergy = QAllergyUserEntity.allergyUserEntity;
 
         JPQLQuery<Tuple> query = from(user)
                 .leftJoin(userAllergy).on(user.uno.eq(userAllergy.user.uno))
@@ -74,7 +74,7 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
 
         QUserEntity user = QUserEntity.userEntity;
         QUserAllergyEntity userAllergy = QUserAllergyEntity.userAllergyEntity;
-        QAllergyEntity allergy = QAllergyEntity.allergyEntity;
+        QAllergyUserEntity allergy = QAllergyUserEntity.allergyUserEntity;
 
         JPQLQuery<Tuple> query = from(user)
                 .leftJoin(userAllergy).on(user.uno.eq(userAllergy.user.uno))
