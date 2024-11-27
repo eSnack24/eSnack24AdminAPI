@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
+import org.esnack24api.esnack24adminapi.product.dto.ProductAllergyListDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
 import org.esnack24api.esnack24adminapi.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -29,4 +30,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductList(pageRequest));
     }
 
+    @GetMapping("/allergylist")
+    public ResponseEntity<PageResponse<ProductAllergyListDTO>> productAllergyList(PageRequest pageRequest) {
+        log.info("Get ProductAllergyList");
+
+        return ResponseEntity.ok(productService.getProductAllergyList(pageRequest));
+    }
 }
