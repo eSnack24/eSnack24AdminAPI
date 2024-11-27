@@ -71,10 +71,8 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
             }
         }
 
-        // 총 데이터 개수 조회
         long totalCount = query.fetchCount();
 
-        // PageResponseDTO 반환
         return PageResponseDTO.<UserDTO>withAll()
                 .dtoList(new ArrayList<>(userMap.values()))
                 .totalCount(totalCount)
