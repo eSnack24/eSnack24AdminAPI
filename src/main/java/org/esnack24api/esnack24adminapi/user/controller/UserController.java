@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("admin/api/v1/user")
@@ -28,7 +27,7 @@ public class UserController {
 
 
     @GetMapping("list")
-    public ResponseEntity<List<UserDTO>> userLists(@Validated PageRequestDTO pageRequestDTO){
+    public ResponseEntity<PageResponseDTO<UserDTO>> userLists(@Validated PageRequestDTO pageRequestDTO){
 
         return ResponseEntity.ok(userService.userList(pageRequestDTO));
 
