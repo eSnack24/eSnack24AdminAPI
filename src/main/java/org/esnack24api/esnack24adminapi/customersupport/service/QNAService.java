@@ -9,12 +9,15 @@ import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.customersupport.domain.QNAEntity;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNADetailDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAAnswerDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.repository.QNARepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -52,6 +55,28 @@ public class QNAService {
         qnaRepository.save(qna);
 
         return "Successfully updated QNA answer";
+    }
+
+    public QNADetailDTO QNADetail(Long qno) {
+
+        log.info("QNA Detail service");
+
+        return qnaRepository.qnaDetail(qno);
+    }
+
+    public String QNADelete(Long qno) {
+        log.info("QNA Delete service");
+
+        Optional<QNAEntity> qna = qnaRepository.findById(qno);
+
+        if (qna.isPresent()) {
+            QNAEntity qnaEntity = qna.get();
+
+            qnaEntity.setQdelete(true);
+
+            return "QNA deleted";
+        }
+        return "QNA not found";
     }
 
 }
