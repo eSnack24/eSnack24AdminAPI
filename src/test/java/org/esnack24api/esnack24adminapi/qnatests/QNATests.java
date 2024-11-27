@@ -35,4 +35,14 @@ public class QNATests {
         log.info("Result: {}", result);
 
     }
+
+    @Transactional
+    @Commit
+    @Test
+    public void QNADetailTest(){
+
+        log.info("Testing QNA Detail");
+
+        qnaRepository.qnaDetail(9L);
+    }
 }

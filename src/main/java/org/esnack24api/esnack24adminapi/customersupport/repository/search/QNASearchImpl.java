@@ -9,6 +9,8 @@ import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.customersupport.domain.FAQEntity;
 import org.esnack24api.esnack24adminapi.customersupport.domain.QNAEntity;
 import org.esnack24api.esnack24adminapi.customersupport.domain.QQNAEntity;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQDetailDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNADetailDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.product.domain.QProductEntity;
 import org.esnack24api.esnack24adminapi.user.domain.QUserEntity;
@@ -74,5 +76,42 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
                 .pageRequestDTO(pageRequestDTO)
                 .build();
 
+    }
+
+    @Override
+    public QNADetailDTO qnaDetail(Long pno) {
+
+        QQNAEntity qna = QQNAEntity.qNAEntity;
+        QUserEntity user = QUserEntity.userEntity;
+        QProductEntity product = QProductEntity.productEntity;
+        QAdminEntity admin = QAdminEntity.adminEntity;
+
+        JPQLQuery<QNAEntity> query = from(qna);
+
+        query.leftJoin(user).on(user.eq(qna.user));
+        query.leftJoin(product).on(product.eq(qna.product));
+        query.leftJoin(admin).on(admin.eq(qna.admin));
+
+        query.where(qna.qno.gt(0));
+
+        JPQLQuery<QNADetailDTO> tupleQuery = query.select(
+                Projections.bean(QNADetailDTO.class,
+                        qna.qno,
+                        qna.qtitle,
+                        qna.qcontent,
+                        qna.qanswer,
+                        qna.product.ptitle_ko,
+                        qna.user.uemail,
+                        qna.admin.admname,
+                        qna.qstatus,
+                        qna.qregdate,
+                        qna.qmoddate
+                )
+        );
+
+        QNADetailDTO list = tupleQuery.fetchFirst();
+
+
+        return list;
     }
 }

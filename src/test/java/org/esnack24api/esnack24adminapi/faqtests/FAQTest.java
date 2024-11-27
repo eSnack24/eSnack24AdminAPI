@@ -39,7 +39,7 @@ public class FAQTest {
     @Commit
     public void testDetailFAQ() {
 
-        FAQDetailDTO List = faqRepository.detailFAQ(Long.valueOf(2));
+        FAQDetailDTO List = faqRepository.detailFAQ(2L);
 
         log.info(List);
 
