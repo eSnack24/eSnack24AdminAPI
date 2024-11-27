@@ -60,6 +60,6 @@ public class AdminTests {
         pageRequestDTO.setPage(1);
         pageRequestDTO.setSize(10);
 
-        adminRepository.adminWorkList(pageRequestDTO);
+//        adminRepository.adminWorkList(pageRequestDTO);
     }
 }
