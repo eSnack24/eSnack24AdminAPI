@@ -2,7 +2,7 @@ package org.esnack24api.esnack24adminapi.customersupport.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.esnack24api.esnack24adminapi.customersupport.dto.*;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.*;
 import org.esnack24api.esnack24adminapi.customersupport.service.FAQService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -83,6 +85,8 @@ public class AdminService {
                 adminEntity.setAdmname(adminDTO.getAdmname());
             }
 
+            adminEntity.setAdmmoddate(Timestamp.from(Instant.now()));
+
             adminRepository.save(adminEntity);
 
             return "Successfully updated";
@@ -98,7 +102,11 @@ public class AdminService {
 
         if(admin.isPresent()) {
 
-            adminRepository.delete(admin.get());
+            AdminEntity adminEntity = admin.get();
+
+            adminEntity.setAdmdelete(true);
+
+            adminRepository.save(adminEntity);
 
             return "Successfully deleted";
         }

@@ -1,15 +1,13 @@
-package org.esnack24api.esnack24adminapi.customersupport.dto;
+package org.esnack24api.esnack24adminapi.customersupport.dto.faq;
 
 import lombok.Data;
 
 @Data
-public class FAQDetailDTO {
+public class FAQListDTO {
 
     private Long fno;
     private Long admno;
     private String ftitle;
     private String fcategory;
     private boolean fdelete;
-    private String fcontent;
-
 }

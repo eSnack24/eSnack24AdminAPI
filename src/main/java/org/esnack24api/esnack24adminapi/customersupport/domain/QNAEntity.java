@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ToString(exclude = {"product", "user"})
+@ToString(exclude = {"product", "user", "admin"})
 @Table(name = "tbl_qna")
 public class QNAEntity {
 
@@ -43,31 +44,10 @@ public class QNAEntity {
     private String qanswer;
     private String qfilename;
 
-    @Builder.Default
     private boolean qdelete = false;
-
-    @Builder.Default
     private boolean qstatus = false;
 
-    @CreatedDate
-    private LocalDateTime qregdate;
+    private Timestamp qregdate;
+    private Timestamp qmoddate;
 
-    @LastModifiedDate
-    private LocalDateTime qmoddate;
-
-    // 수정 메서드
-    public void updateQNA(String qtitle, String qcontent, String qfilename) {
-        this.qtitle = qtitle;
-        this.qcontent = qcontent;
-        this.qfilename = qfilename;
-    }
-
-    // 삭제 메서드
-    public void deleteQNA() {
-        this.qdelete = true;
-    }
-
-    public boolean getQstatus() {
-        return this.qstatus;
-    }
 }
