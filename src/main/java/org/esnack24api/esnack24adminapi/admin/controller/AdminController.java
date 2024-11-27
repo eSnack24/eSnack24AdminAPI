@@ -66,5 +66,12 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAdminListByRole(role, pageRequestDTO));
     }
 
+    @GetMapping("workList/{order_by}")
+    public ResponseEntity<PageResponseDTO<AdminWorkListDTO>> adminWorkList(
+            @PathVariable String order_by, PageRequestDTO pageRequestDTO) {
+
+        return ResponseEntity.ok(adminService.getAdminWorkList(order_by, pageRequestDTO));
+    }
+
 
 }

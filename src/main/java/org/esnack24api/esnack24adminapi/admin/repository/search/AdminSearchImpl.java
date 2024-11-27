@@ -92,19 +92,48 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
     }
 
     @Override
-    public PageResponseDTO<AdminWorkListDTO> adminWorkList(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<AdminWorkListDTO> adminWorkList(String order_by, PageRequestDTO pageRequestDTO) {
 
         Pageable pageable =
                 PageRequest.of(pageRequestDTO.getPage() - 1,
-                        pageRequestDTO.getSize(),
-                        Sort.by("admno").ascending());
+                        pageRequestDTO.getSize());
 
         QAdminEntity admin = QAdminEntity.adminEntity;
         QQNAEntity qna = QQNAEntity.qNAEntity;
 
         JPQLQuery<AdminEntity> query = from(admin);
-        query.leftJoin(qna).on();
+        query.leftJoin(qna).on(qna.admin.eq(admin));
 
-        return null;
+        query.where(admin.admno.gt(0));
+
+        query.groupBy(admin);
+
+        if (order_by.equals("asc")) {
+            query.orderBy(qna.count().asc());
+        } else {
+            query.orderBy(qna.count().desc());
+        }
+
+        this.getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<AdminWorkListDTO> tupleQuery = query.select(
+                Projections.bean(AdminWorkListDTO.class,
+                        admin.admno,
+                        admin.admid,
+                        admin.admrole,
+                        admin.admname,
+                        qna.count().as("count")
+                )
+        );
+
+        List<AdminWorkListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<AdminWorkListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
     }
 }

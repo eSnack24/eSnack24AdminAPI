@@ -50,4 +50,16 @@ public class AdminTests {
 
         adminRepository.getAdmin(2L);
     }
+
+    @Test
+    @Transactional
+    public void adminWorkListTest() {
+
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+
+        pageRequestDTO.setPage(1);
+        pageRequestDTO.setSize(10);
+
+        adminRepository.adminWorkList(pageRequestDTO);
+    }
 }
