@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAAnswerDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.service.QNAService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/api/v1/qna")
@@ -25,5 +24,12 @@ public class QNAController {
 
         return ResponseEntity.ok(qnaService.QNAList(pageRequestDTO));
 
+    }
+
+    @PutMapping("answer/{admno}")
+    public ResponseEntity<String> answerQNA(
+            @PathVariable Long admno, @RequestBody QNAAnswerDTO qnaAnswerDTO) {
+
+        return ResponseEntity.ok(qnaService.setQNAAnswer(admno, qnaAnswerDTO));
     }
 }
