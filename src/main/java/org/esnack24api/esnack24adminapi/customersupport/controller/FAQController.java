@@ -2,9 +2,7 @@ package org.esnack24api.esnack24adminapi.customersupport.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQAddDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQDetailDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.*;
 import org.esnack24api.esnack24adminapi.customersupport.service.FAQService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +44,20 @@ public class FAQController {
     public ResponseEntity<String> faqDelete(@PathVariable("fno") Long fno){
         log.info("Deleting faq");
         return ResponseEntity.ok(faqService.deleteFAQ(fno));
+    }
+
+    @PutMapping("edit/{fno}")
+    public ResponseEntity<String> faqEdit(@PathVariable("fno") Long fno, @RequestBody FAQEditDTO faqEditDTO){
+        log.info("Editing faq");
+
+        FAQDTO dto = new FAQDTO();
+
+        dto.setFno(fno);
+        dto.setFtitle(faqEditDTO.getFtitle());
+        dto.setFcategory(faqEditDTO.getFcategory());
+        dto.setFcontent(faqEditDTO.getFcontent());
+
+        return ResponseEntity.ok(faqService.editFAQ(dto));
+
     }
 }

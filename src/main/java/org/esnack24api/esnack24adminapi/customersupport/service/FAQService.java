@@ -5,9 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
 import org.esnack24api.esnack24adminapi.customersupport.domain.FAQEntity;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQAddDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQDetailDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.*;
 import org.esnack24api.esnack24adminapi.customersupport.repository.FAQRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +67,24 @@ public class FAQService {
         }
 
         return "Delete failed";
+    }
+
+    public String editFAQ(FAQDTO faqDTO) {
+
+        Optional<FAQEntity> faq = faqRepository.findById(faqDTO.getFno());
+
+        if(faq.isPresent()) {
+            FAQEntity faqEntity = faq.get();
+
+            faqEntity.setFtitle(faqDTO.getFtitle());
+            faqEntity.setFcategory(faqDTO.getFcategory());
+            faqEntity.setFcontent(faqDTO.getFcontent());
+
+            faqRepository.save(faqEntity);
+        }
+
+        return "success edit faq";
+
     }
 
 
