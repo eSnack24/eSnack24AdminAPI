@@ -2,8 +2,8 @@ package org.esnack24api.esnack24adminapi.faqtests;
 
 
 import lombok.extern.log4j.Log4j2;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQDetailDTO;
-import org.esnack24api.esnack24adminapi.customersupport.dto.FAQListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQDetailDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.repository.FAQRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
