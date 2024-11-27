@@ -1,7 +1,7 @@
 package org.esnack24api.esnack24adminapi.admin.exception;
 
-import lombok.Data;
 
+import lombok.Data;
 
 @Data
 public class AdminTaskException extends RuntimeException {

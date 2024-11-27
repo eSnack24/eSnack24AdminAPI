@@ -2,7 +2,7 @@ package org.esnack24api.esnack24adminapi.allergy.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.esnack24api.esnack24adminapi.allergy.domain.Allergy2Entity;
+import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.dto.AllergyCrudDTO;
 import org.esnack24api.esnack24adminapi.allergy.repository.AllergyRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class AllergyService {
     // 알레르기 생성
     @Transactional
     public String addAllergy(AllergyCrudDTO dto) {
-        Allergy2Entity entity = Allergy2Entity.builder()
+        AllergyEntity entity = AllergyEntity.builder()
                 .atitle_ko(dto.getAtitle_ko())
                 .atitle_en(dto.getAtitle_en())
                 .atitle_ja(dto.getAtitle_ja())
@@ -47,10 +47,10 @@ public class AllergyService {
     // 알레르기 수정
     @Transactional
     public String editAllergy(Long ano, AllergyCrudDTO dto) {
-        Optional<Allergy2Entity> allergyOptional = allergyRepository.findById(ano);
+        Optional<AllergyEntity> allergyOptional = allergyRepository.findById(ano);
 
         if (allergyOptional.isPresent()) {
-            Allergy2Entity entity = allergyOptional.get();
+            AllergyEntity entity = allergyOptional.get();
             entity.setAtitle_ko(dto.getAtitle_ko());
             entity.setAtitle_en(dto.getAtitle_en());
             entity.setAtitle_ja(dto.getAtitle_ja());
@@ -66,7 +66,7 @@ public class AllergyService {
     // 알레르기 삭제
     @Transactional
     public String deleteAllergy(Long ano) {
-        Optional<Allergy2Entity> allergyOptional = allergyRepository.findById(ano);
+        Optional<AllergyEntity> allergyOptional = allergyRepository.findById(ano);
 
         if (allergyOptional.isPresent()) {
             allergyRepository.delete(allergyOptional.get());
