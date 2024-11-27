@@ -49,10 +49,10 @@ public class TokenController {
         log.info(adminDTO);
 
         String admid = adminDTO.getAdmid();
-        String admpw = adminDTO.getAdmpw();
+        String admrole = adminDTO.getAdmrole();
 
         Map<String, Object> claimMap =
-                Map.of("admid", admid, "role", admpw);
+                Map.of("admid", admid, "role", admrole);
 
         String accessToken = jwtUtil.createToken(claimMap, accessTime);
         String refreshToken = jwtUtil.createToken(claimMap, refreshTime);
