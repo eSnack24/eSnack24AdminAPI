@@ -3,10 +3,7 @@ package org.esnack24api.esnack24adminapi.admin.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
-import org.esnack24api.esnack24adminapi.admin.dto.AdminDTO;
-import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
-import org.esnack24api.esnack24adminapi.admin.dto.AdminReadDTO;
-import org.esnack24api.esnack24adminapi.admin.dto.AdminRegisterDTO;
+import org.esnack24api.esnack24adminapi.admin.dto.*;
 import org.esnack24api.esnack24adminapi.admin.exception.AdminExceptions;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
@@ -122,5 +119,10 @@ public class AdminService {
     public PageResponseDTO<AdminListDTO> getAdminListByRole(String role, PageRequestDTO pageRequestDTO) {
 
         return adminRepository.adminListByRole(role, pageRequestDTO);
+    }
+
+    public PageResponseDTO<AdminWorkListDTO> getAdminWorkList(String order_by, PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminWorkList(order_by, pageRequestDTO);
     }
 }

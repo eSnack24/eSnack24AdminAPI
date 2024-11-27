@@ -11,5 +11,5 @@ public interface AdminSearch {
 
     PageResponseDTO<AdminListDTO> adminListByRole(String role, PageRequestDTO pageRequestDTO);
 
-    PageResponseDTO<AdminWorkListDTO> adminWorkList(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<AdminWorkListDTO> adminWorkList(String order_by, PageRequestDTO pageRequestDTO);
 }

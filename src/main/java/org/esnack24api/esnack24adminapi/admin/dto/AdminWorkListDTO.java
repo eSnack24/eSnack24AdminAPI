@@ -13,5 +13,5 @@ public class AdminWorkListDTO {
 
     private String admrole;
 
-    private int count;
+    private Long count;
 }
