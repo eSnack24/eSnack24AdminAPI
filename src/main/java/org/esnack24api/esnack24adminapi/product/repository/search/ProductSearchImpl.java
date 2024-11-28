@@ -34,7 +34,10 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         QProductEntity product = QProductEntity.productEntity;
 
         JPQLQuery<ProductEntity> query = from(product);
-        query.where(product.pno.gt(0));
+
+        query.where(product.pno.gt(0))
+             .where(product.pdelete.eq(false));
+
 
         query.offset((long) (pageRequest.getPage() - 1) * pageRequest.getSize())
                 .limit(pageRequest.getSize());
@@ -79,6 +82,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         JPQLQuery<ProductAllergyListDTO> query = from(product)
                 .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                 .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
+                .where(product.pdelete.eq(false))
                 .groupBy(product.pno)
                 .select(Projections.constructor(ProductAllergyListDTO.class,
                         product.pno,
@@ -121,6 +125,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                 .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
                 .where(product.pno.eq(pno))
+                .where(product.pdelete.eq(false))
                 .groupBy(product.pno)
                 .select(Projections.constructor(ProductDetailDTO.class,
                         product.pno,

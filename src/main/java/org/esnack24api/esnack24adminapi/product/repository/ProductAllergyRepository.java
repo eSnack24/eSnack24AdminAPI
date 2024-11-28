@@ -14,5 +14,4 @@ public interface ProductAllergyRepository extends JpaRepository<ProductAllergyEn
     @Query("DELETE FROM ProductAllergyEntity pa WHERE pa.product.pno = :pno")
     void deleteByProductPno(@Param("pno") Long pno);
 
-
 }

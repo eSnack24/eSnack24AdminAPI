@@ -69,6 +69,8 @@ public class ProductService {
     // 상품 수정
     @Transactional
     public String editProduct(Long pno, ProductEditDTO productEditDTO) {
+        log.info("editProduct pno" + pno);
+
         Optional<ProductEntity> productOptional = productRepository.findById(pno);
         if(productOptional.isPresent()) {
             ProductEntity productEntity = productOptional.get();
@@ -104,6 +106,25 @@ public class ProductService {
             productAllergyService.updateProductAllergies(productEntity, productEditDTO.getAllergySelectList());
 
             return "상품이 수정되었습니다.";
+        } else {
+            return "해당 제품을 찾을 수 없습니다.";
+        }
+    }
+
+    //상품 논리 삭제
+    @Transactional
+    public String deleteProduct(Long pno) {
+        log.info("deleteProduct pno: " + pno);
+
+        Optional<ProductEntity> productOptional = productRepository.findById(pno);
+        if (productOptional.isPresent()) {
+            ProductEntity productEntity = productOptional.get();
+
+            productEntity.setPdelete(true);
+
+            productRepository.save(productEntity);
+
+            return "상품이 삭제되었습니다.";
         } else {
             return "해당 제품을 찾을 수 없습니다.";
         }
