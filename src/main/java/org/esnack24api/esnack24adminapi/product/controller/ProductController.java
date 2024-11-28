@@ -2,6 +2,8 @@ package org.esnack24api.esnack24adminapi.product.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.dto.*;
@@ -20,19 +22,17 @@ public class ProductController {
     private final ProductService productService;
 
     // 상품 리스트 조회
-    @GetMapping("list")
-    public ResponseEntity<PageResponse<ProductListDTO>> getProductList(PageRequest pageRequest) {
-        log.info("Get ProductList");
-
-        return ResponseEntity.ok(productService.getProductList(pageRequest));
+    @GetMapping("/list")
+    public ResponseEntity<PageResponseDTO<ProductListDTO>> getProductList(PageRequestDTO pageRequestDTO) {
+        PageResponseDTO<ProductListDTO> responseDTO = productService.getProductList(pageRequestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
-    // 상품 알레르기 리스트 조회
-    @GetMapping("/allergylist")
-    public ResponseEntity<PageResponse<ProductAllergyListDTO>> productAllergyList(PageRequest pageRequest) {
-        log.info("Get ProductAllergyList");
-
-        return ResponseEntity.ok(productService.getProductAllergyList(pageRequest));
+    // 상품-알러지 리스트 조회
+    @GetMapping("/allergy-list")
+    public ResponseEntity<PageResponseDTO<ProductAllergyListDTO>> getProductAllergyList(PageRequestDTO pageRequestDTO) {
+        PageResponseDTO<ProductAllergyListDTO> responseDTO = productService.getProductAllergyList(pageRequestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     // 상품 상세 조회

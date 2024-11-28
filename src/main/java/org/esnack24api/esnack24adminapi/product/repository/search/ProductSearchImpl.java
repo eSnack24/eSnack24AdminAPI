@@ -7,6 +7,8 @@ import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.domain.QAllergyEntity;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
@@ -30,17 +32,18 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
     // 상품 리스트를 조회
     @Override
-    public PageResponse<ProductListDTO> listProductAll(PageRequest pageRequest) {
+    public PageResponseDTO<ProductListDTO> listProductAll(PageRequestDTO pageRequestDTO) {
         QProductEntity product = QProductEntity.productEntity;
 
         JPQLQuery<ProductEntity> query = from(product);
 
-        query.where(product.pno.gt(0))
-             .where(product.pdelete.eq(false));
+        query.where(product.pdelete.eq(false));
 
+        int page = pageRequestDTO.getPage();
+        int size = pageRequestDTO.getSize();
 
-        query.offset((long) (pageRequest.getPage() - 1) * pageRequest.getSize())
-                .limit(pageRequest.getSize());
+        query.offset((long) (page - 1) * size)
+                .limit(size);
 
         JPQLQuery<ProductListDTO> dtoQuery = query.select(
                 Projections.bean(ProductListDTO.class,
@@ -58,18 +61,18 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         );
 
         List<ProductListDTO> list = dtoQuery.fetch();
-        long total = query.fetchCount();
+        long totalCount = query.fetchCount();
 
-        return PageResponse.<ProductListDTO>with()
-                .list(list)
-                .total((int) total)
-                .pageRequest(pageRequest)
+        return PageResponseDTO.<ProductListDTO>withAll()
+                .dtoList(list)
+                .pageRequestDTO(pageRequestDTO)
+                .totalCount(totalCount)
                 .build();
     }
 
     // 상품-알러지 리스트 조회
     @Override
-    public PageResponse<ProductAllergyListDTO> listProductAllergyInfo(PageRequest pageRequest) {
+    public PageResponseDTO<ProductAllergyListDTO> listProductAllergyInfo(PageRequestDTO pageRequestDTO) {
         QProductEntity product = QProductEntity.productEntity;
         QProductAllergyEntity productAllergy = QProductAllergyEntity.productAllergyEntity;
         QAllergyEntity allergy = QAllergyEntity.allergyEntity;
@@ -96,16 +99,19 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                         allergyInfo
                 ));
 
-        query.offset((long) (pageRequest.getPage() - 1) * pageRequest.getSize())
-                .limit(pageRequest.getSize());
+        int page = pageRequestDTO.getPage();
+        int size = pageRequestDTO.getSize();
+
+        query.offset((long) (page - 1) * size)
+                .limit(size);
 
         List<ProductAllergyListDTO> list = query.fetch();
-        long total = query.fetchCount();
+        long totalCount = query.fetchCount();
 
-        return PageResponse.<ProductAllergyListDTO>with()
-                .list(list)
-                .total((int) total)
-                .pageRequest(pageRequest)
+        return PageResponseDTO.<ProductAllergyListDTO>withAll()
+                .dtoList(list)
+                .pageRequestDTO(pageRequestDTO)
+                .totalCount(totalCount)
                 .build();
     }
 
