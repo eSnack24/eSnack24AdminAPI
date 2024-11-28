@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class TokenResponseDTO {
 
-    private String admid;
+    private Long admno;
 
     private String accessToken;
 
