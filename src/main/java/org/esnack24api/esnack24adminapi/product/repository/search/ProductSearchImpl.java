@@ -18,6 +18,8 @@ import org.esnack24api.esnack24adminapi.product.dto.ProductAddDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductAllergyListDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
+import org.esnack24api.esnack24adminapi.search.dto.ProductAllergySearchDTO;
+import org.esnack24api.esnack24adminapi.search.dto.ProductSearchDTO;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -157,5 +159,100 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 ))
                 .fetchOne();
     }
+
+        // 제품 정보 검색 구현
+        @Override
+        public PageResponseDTO<ProductListDTO> searchProducts(ProductSearchDTO productSearchDTO) {
+            QProductEntity product = QProductEntity.productEntity;
+
+            JPQLQuery<ProductEntity> query = from(product);
+
+            // 논리 삭제된 제품 제외
+            query.where(product.pdelete.eq(false));
+
+            // 제품명 검색
+            if (productSearchDTO.getPtitle_ko() != null && !productSearchDTO.getPtitle_ko().trim().isEmpty()) {
+                query.where(product.ptitle_ko.containsIgnoreCase(productSearchDTO.getPtitle_ko()));
+            }
+
+            // 카테고리 검색
+            if (productSearchDTO.getPcategory_ko() != null && !productSearchDTO.getPcategory_ko().trim().isEmpty()) {
+                query.where(product.pcategory_ko.eq(productSearchDTO.getPcategory_ko()));
+            }
+
+            // 페이징 처리
+            int page = productSearchDTO.getPage();
+            int size = productSearchDTO.getSize();
+            query.offset((long) (page - 1) * size).limit(size);
+
+            // DTO 매핑
+            JPQLQuery<ProductListDTO> dtoQuery = query.select(
+                    Projections.bean(ProductListDTO.class,
+                            product.pno,
+                            product.ptitle_ko,
+                            product.pcategory_ko,
+                            product.price,
+                            product.pqty,
+                            product.pfilename
+                    )
+            );
+
+            List<ProductListDTO> list = dtoQuery.fetch();
+            long totalCount = query.fetchCount();
+
+            return PageResponseDTO.<ProductListDTO>withAll()
+                    .dtoList(list)
+                    .pageRequestDTO(productSearchDTO)
+                    .totalCount(totalCount)
+                    .build();
+        }
+
+        // 알레르기 정보 포함 검색 구현
+        @Override
+        public PageResponseDTO<ProductAllergyListDTO> searchProductsWithAllergy(ProductAllergySearchDTO productAllergySearchDTO) {
+            QProductEntity product = QProductEntity.productEntity;
+            QProductAllergyEntity productAllergy = QProductAllergyEntity.productAllergyEntity;
+            QAllergyEntity allergy = QAllergyEntity.allergyEntity;
+
+            JPQLQuery<ProductEntity> query = from(product)
+                    .innerJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
+                    .innerJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano));
+
+            // 논리 삭제된 제품 제외
+            query.where(product.pdelete.eq(false));
+
+            // 알레르기 조건 적용
+            if (productAllergySearchDTO.getAllergySelectList() != null && !productAllergySearchDTO.getAllergySelectList().isEmpty()) {
+                query.where(allergy.ano.in(productAllergySearchDTO.getAllergySelectList()));
+            }
+
+            // 페이징 처리
+            int page = productAllergySearchDTO.getPage();
+            int size = productAllergySearchDTO.getSize();
+            query.offset((long) (page - 1) * size).limit(size);
+
+            // 그룹화 및 DTO 매핑
+            JPQLQuery<ProductAllergyListDTO> dtoQuery = query.groupBy(product.pno)
+                    .select(Projections.constructor(ProductAllergyListDTO.class,
+                            product.pno,
+                            product.ptitle_ko,
+                            product.pcategory_ko,
+                            product.pqty,
+                            product.price,
+                            product.pfilename,
+                            product.pregdate,
+                            product.pmoddate,
+                            Expressions.stringTemplate("group_concat({0})", allergy.atitle_ko).as("allergyInfo")
+                    ));
+
+            List<ProductAllergyListDTO> list = dtoQuery.fetch();
+            long totalCount = query.fetchCount();
+
+            return PageResponseDTO.<ProductAllergyListDTO>withAll()
+                    .dtoList(list)
+                    .pageRequestDTO(productAllergySearchDTO)
+                    .totalCount(totalCount)
+                    .build();
+        }
 
 }

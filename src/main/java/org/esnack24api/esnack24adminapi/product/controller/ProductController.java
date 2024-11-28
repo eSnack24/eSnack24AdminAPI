@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("permitAll()")
 @RequestMapping("admin/api/v1/product")
 public class ProductController {
 
@@ -24,6 +23,8 @@ public class ProductController {
     // 상품 리스트 조회
     @GetMapping("/list")
     public ResponseEntity<PageResponseDTO<ProductListDTO>> getProductList(PageRequestDTO pageRequestDTO) {
+        log.info("getProductList");
+
         PageResponseDTO<ProductListDTO> responseDTO = productService.getProductList(pageRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
@@ -31,6 +32,8 @@ public class ProductController {
     // 상품-알러지 리스트 조회
     @GetMapping("/allergy-list")
     public ResponseEntity<PageResponseDTO<ProductAllergyListDTO>> getProductAllergyList(PageRequestDTO pageRequestDTO) {
+        log.info("getProductAllergy-List");
+
         PageResponseDTO<ProductAllergyListDTO> responseDTO = productService.getProductAllergyList(pageRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
