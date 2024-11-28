@@ -34,7 +34,7 @@ public class ProductSearchController {
     }
 
     // 알레르기 정보 포함 검색
-    @GetMapping("/search--allergy")
+    @GetMapping("/search-allergy")
     public ResponseEntity<PageResponseDTO<ProductAllergyListDTO>> searchProductsWithAllergy(@ModelAttribute ProductAllergySearchDTO productAllergySearchDTO) {
         log.info("search Allergy Products");
 
