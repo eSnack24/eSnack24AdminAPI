@@ -8,4 +8,6 @@ import org.esnack24api.esnack24adminapi.review.dto.ReviewListDTO;
 public interface ReviewSearch {
 
     PageResponseDTO<ReviewListDTO> reviewList(PageRequestDTO pageRequestDTO);
+
+    ReviewListDTO ReviewOne(Long rno);
 }
