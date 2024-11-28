@@ -4,16 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
-import org.esnack24api.esnack24adminapi.product.dto.ProductAllergyListDTO;
-import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
-import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
+import org.esnack24api.esnack24adminapi.product.dto.*;
 import org.esnack24api.esnack24adminapi.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +39,35 @@ public class ProductController {
     @GetMapping("/detail/{pno}")
     public ResponseEntity<ProductDetailDTO> getProductOne(@PathVariable Long pno) {
         log.info("Get Product Detail - pno: " + pno);
+
         return ResponseEntity.ok(productService.getProductOne(pno));
+    }
+
+    // 상품 추가
+    @PostMapping("/add")
+    public ResponseEntity<String> addProduct(@RequestBody ProductAddDTO productAddDTO) {
+        log.info("Adding new product");
+
+        return ResponseEntity.ok(productService.addProduct(productAddDTO));
+    }
+
+    // 상품 수정
+    @PutMapping("/edit/{pno}")
+    public ResponseEntity<String> editProduct(@PathVariable Long pno, @RequestBody ProductEditDTO productEditDTO) {
+        log.info("Editing product - pno: " + pno);
+
+        String result = productService.editProduct(pno, productEditDTO);
+
+        return ResponseEntity.ok(result);
+    }
+
+    // 상품 삭제
+    @DeleteMapping("/delete/{pno}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long pno) {
+        log.info("Deleting product - pno: " + pno);
+
+        String result = productService.deleteProduct(pno);
+
+        return ResponseEntity.ok(result);
     }
 }

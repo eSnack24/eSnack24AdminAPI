@@ -5,18 +5,21 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.allergy.domain.AllergyEntity;
 import org.esnack24api.esnack24adminapi.allergy.domain.QAllergyEntity;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
 import org.esnack24api.esnack24adminapi.product.domain.QProductAllergyEntity;
 import org.esnack24api.esnack24adminapi.product.domain.QProductEntity;
+import org.esnack24api.esnack24adminapi.product.dto.ProductAddDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductAllergyListDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
 import org.esnack24api.esnack24adminapi.product.dto.ProductListDTO;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+
 
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
@@ -31,7 +34,10 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         QProductEntity product = QProductEntity.productEntity;
 
         JPQLQuery<ProductEntity> query = from(product);
-        query.where(product.pno.gt(0));
+
+        query.where(product.pno.gt(0))
+             .where(product.pdelete.eq(false));
+
 
         query.offset((long) (pageRequest.getPage() - 1) * pageRequest.getSize())
                 .limit(pageRequest.getSize());
@@ -76,6 +82,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         JPQLQuery<ProductAllergyListDTO> query = from(product)
                 .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                 .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
+                .where(product.pdelete.eq(false))
                 .groupBy(product.pno)
                 .select(Projections.constructor(ProductAllergyListDTO.class,
                         product.pno,
@@ -118,6 +125,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                 .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
                 .where(product.pno.eq(pno))
+                .where(product.pdelete.eq(false))
                 .groupBy(product.pno)
                 .select(Projections.constructor(ProductDetailDTO.class,
                         product.pno,
@@ -143,6 +151,5 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 ))
                 .fetchOne();
     }
-
 
 }
