@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/jwt")
+@RequestMapping("/admin/api/v1/jwt")
 @RequiredArgsConstructor
 @Log4j2
 public class TokenController {
