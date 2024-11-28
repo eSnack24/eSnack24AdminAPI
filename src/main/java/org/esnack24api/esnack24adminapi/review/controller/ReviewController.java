@@ -8,9 +8,7 @@ import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.review.dto.ReviewListDTO;
 import org.esnack24api.esnack24adminapi.review.service.ReviewService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/api/v1/review")
@@ -27,4 +25,19 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.ReviewList(pageRequestDTO));
 
     }
+
+    @GetMapping("detail/{rno}")
+    public ResponseEntity<ReviewListDTO> getReviewOne(@PathVariable Long rno) {
+        log.info("getReviewDetail - rno: " + rno);
+
+        return ResponseEntity.ok(reviewService.ReviewOne(rno));
+    }
+
+    @DeleteMapping("/delete/{rno}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long rno) {
+        log.info("deleteReview - rno: " + rno);
+        reviewService.deleteReview(rno);
+        return ResponseEntity.noContent().build();  // 삭제 성공 시 204 No Content 반환
+    }
+
 }
