@@ -25,7 +25,7 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
         super(ReviewEntity.class);
     }
 
-
+    // 리뷰 리스트
     @Override
     public PageResponseDTO<ReviewListDTO> reviewList(PageRequestDTO pageRequestDTO) {
 
@@ -71,4 +71,43 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
+
+    // 리뷰 상세
+    @Override
+    public ReviewListDTO ReviewOne(Long rno) {
+        QReviewEntity review = QReviewEntity.reviewEntity;
+        QProductEntity product = QProductEntity.productEntity;
+        QUserEntity user = QUserEntity.userEntity;
+
+        // 리뷰 조회를 위한 기본 쿼리 설정
+        JPQLQuery<ReviewEntity> query = from(review);
+
+        // 필요한 제품과 사용자 조인 설정
+        query.leftJoin(product).on(review.product.eq(product));
+        query.leftJoin(user).on(review.user.eq(user));
+
+        // 리뷰 번호로 필터링 및 논리 삭제된 항목 제외
+        query.where(review.rno.eq(rno));
+        query.where(review.rdelete.isFalse());
+
+        // DTO 매핑
+        JPQLQuery<ReviewListDTO> tupleQuery = query.select(
+                Projections.bean(ReviewListDTO.class,
+                        review.rno,
+                        review.product.ptitle_ko,
+                        review.user.uemail,
+                        review.rcontent,
+                        review.rstar,
+                        review.rimage,
+                        review.rregdate,
+                        review.rmoddate
+                )
+        );
+
+        // 단일 결과 fetch
+        ReviewListDTO reviewDetail = tupleQuery.fetchOne();
+
+        return reviewDetail;
+    }
+
 }

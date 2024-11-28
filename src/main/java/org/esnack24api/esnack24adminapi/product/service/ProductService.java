@@ -2,6 +2,8 @@ package org.esnack24api.esnack24adminapi.product.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
@@ -23,18 +25,18 @@ public class ProductService {
 
     // 상품 리스트 조회
     @Transactional(readOnly = true)
-    public PageResponse<ProductListDTO> getProductList(PageRequest pageRequest) {
+    public PageResponseDTO<ProductListDTO> getProductList(PageRequestDTO pageRequestDTO) {
         log.info("getProductList");
 
-        return productRepository.listProductAll(pageRequest);
+        return productRepository.listProductAll(pageRequestDTO);
     }
 
     // 상품-알러지 리스트 조회
     @Transactional(readOnly = true)
-    public PageResponse<ProductAllergyListDTO> getProductAllergyList(PageRequest pageRequest) {
-        log.info("getProductAllergyList");
+    public PageResponseDTO<ProductAllergyListDTO> getProductAllergyList(PageRequestDTO pageRequestDTO) {
+        log.info("getProductAllergy-List");
 
-        return productRepository.listProductAllergyInfo(pageRequest);
+        return productRepository.listProductAllergyInfo(pageRequestDTO);
     }
 
     // 상품 상세 조회
