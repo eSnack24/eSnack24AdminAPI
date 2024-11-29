@@ -1,3 +1,4 @@
+
 package org.esnack24api.esnack24adminapi.admin.service;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import java.util.Optional;
 public class AdminService {
 
     private final PasswordEncoder passwordEncoder;
-    
+
     private final AdminRepository adminRepository;
 
 
@@ -71,7 +72,7 @@ public class AdminService {
 
         if (admin.isPresent()) {
             AdminEntity adminEntity = admin.get();
-            
+
             if (adminDTO.getAdmid() != null) {
                 adminEntity.setAdmid(adminDTO.getAdmid());
             }

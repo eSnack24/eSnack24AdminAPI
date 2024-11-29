@@ -1,3 +1,4 @@
+
 package org.esnack24api.esnack24adminapi.admin.repository.search;
 
 import com.querydsl.core.types.Projections;

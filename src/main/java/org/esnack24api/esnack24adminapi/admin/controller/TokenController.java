@@ -133,4 +133,22 @@ public class TokenController {
             }
         }
     }
+
+    @PostMapping("deleteToken")
+    public ResponseEntity<TokenResponseDTO> deleteToken(
+            @RequestParam Long admno) {
+
+        Map<String, Object> claimMap =
+                Map.of("admno", admno);
+
+        String accessToken = jwtUtil.createToken(claimMap, 0);
+        String refreshToken = jwtUtil.createToken(claimMap, 0);
+
+        TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
+        tokenResponseDTO.setAccessToken(accessToken);
+        tokenResponseDTO.setRefreshToken(refreshToken);
+        tokenResponseDTO.setAdmno(admno);
+
+        return ResponseEntity.ok(tokenResponseDTO);
+    }
 }

@@ -43,7 +43,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(uri.equals("/admin/api/v1/jwt/refreshToken")) return true;
 
 
-        return false;
+        return true;
     }
 
     @Override
