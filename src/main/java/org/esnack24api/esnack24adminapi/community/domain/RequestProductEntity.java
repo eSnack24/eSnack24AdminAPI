@@ -2,6 +2,7 @@ package org.esnack24api.esnack24adminapi.community.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -27,6 +28,7 @@ public class RequestProductEntity {
 
     private Timestamp cpregdate;
 
+    @UpdateTimestamp
     private Timestamp cpmoddate;
 
     private boolean cpdelete;
