@@ -92,7 +92,8 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
         query.leftJoin(product).on(product.eq(qna.product));
         query.leftJoin(admin).on(admin.eq(qna.admin));
 
-        query.where(qna.qno.gt(0));
+        query.where(qna.qno.eq(pno));
+
 
         JPQLQuery<QNADetailDTO> tupleQuery = query.select(
                 Projections.bean(QNADetailDTO.class,

@@ -1,15 +1,16 @@
 package org.esnack24api.esnack24adminapi.product.domain;
 
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +25,9 @@ public class ProductEntity {
     private boolean pdelete;
     private String pfilename;
 
+    @CreationTimestamp
     private Timestamp pregdate;
+    @UpdateTimestamp
     private Timestamp pmoddate;
 
     // ko
