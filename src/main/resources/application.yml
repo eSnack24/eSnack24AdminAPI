@@ -5,7 +5,7 @@ spring:
     import: optional:file:.env[.properties]
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://10.10.10.166:13307/snackdb
+    url: jdbc:mariadb://snackdb.chm9rhbwy6vo.ap-northeast-2.rds.amazonaws.com:3306
     username: snackdbuser
     password: snackdbuser
 
