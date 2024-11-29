@@ -1,6 +1,8 @@
 package org.esnack24api.esnack24adminapi.producttests;
 
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.dto.ProductDetailDTO;
@@ -29,8 +31,8 @@ public class ProductTest {
     @Transactional
     @Commit
     public void testProductList() {
-        PageRequest pageRequest = new PageRequest();
-        PageResponse<ProductListDTO> productList = productRepository.listProductAll(pageRequest);
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResponseDTO<ProductListDTO> productList = productRepository.listProductAll(pageRequestDTO);
         log.info(productList);
     }
 
