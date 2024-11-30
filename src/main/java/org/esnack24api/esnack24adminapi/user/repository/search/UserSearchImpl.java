@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class UserSearchImpl extends QuerydslRepositorySupport implements UserSearch {
@@ -37,49 +38,51 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
+        JPQLQuery<UserDTO> baseQuery = from(user)
+                .select(Projections.bean(UserDTO.class,
+                        user.uno.as("uno"),
+                        user.username.as("username"),
+                        user.uemail.as("email"),
+                        user.ucallnumber.as("callNumber"),
+                        user.ubirth.as("birth"),
+                        user.udelete.as("udelete")))
+                .distinct();
 
-        JPQLQuery<Tuple> query = from(user)
-                .leftJoin(userAllergy).on(user.uno.eq(userAllergy.user.uno))
-                .leftJoin(allergy).on(userAllergy.allergy.ano.eq(allergy.ano))
-                .select(user.uno, user.username, user.uemail, user.ucallnumber,
-                        user.ubirth, user.udelete, allergy.atitle_ko);
+        this.getQuerydsl().applyPagination(pageable, baseQuery);
 
-        this.getQuerydsl().applyPagination(pageable, query);
+        List<UserDTO> userList = baseQuery.fetch();
+
+        List<Long> userIds = userList.stream().map(UserDTO::getUno).collect(Collectors.toList());
+
+        if (!userIds.isEmpty()) {
+            List<Tuple> allergyData = from(userAllergy)
+                    .leftJoin(allergy).on(userAllergy.allergy.ano.eq(allergy.ano))
+                    .where(userAllergy.user.uno.in(userIds))
+                    .select(userAllergy.user.uno, allergy.atitle_ko)
+                    .fetch();
+
+            Map<Long, List<String>> allergyMap = allergyData.stream()
+                    .collect(Collectors.groupingBy(
+                            tuple -> tuple.get(userAllergy.user.uno),
+                            Collectors.mapping(tuple -> tuple.get(allergy.atitle_ko), Collectors.toList())
+                    ));
 
 
-        List<Tuple> result = query.fetch();
-
-
-        Map<Long, UserDTO> userMap = new HashMap<>();
-
-        for (Tuple row : result) {
-            Long uno = row.get(user.uno);
-            UserDTO userDTO = userMap.computeIfAbsent(uno, id -> {
-                UserDTO dto = new UserDTO();
-                dto.setUno(id);
-                dto.setUsername(row.get(user.username));
-                dto.setEmail(row.get(user.uemail));
-                dto.setCallNumber(row.get(user.ucallnumber));
-                dto.setBirth(row.get(user.ubirth));
-                dto.setAllergyList(new ArrayList<>());
-                return dto;
+            userList.forEach(userDTO -> {
+                List<String> allergies = allergyMap.get(userDTO.getUno());
+                userDTO.setAllergyList(allergies != null ? allergies : new ArrayList<>());
             });
-
-            String allergyTitle = row.get(allergy.atitle_ko);
-            if (allergyTitle != null) {
-                userDTO.getAllergyList().add(allergyTitle);
-            }
         }
 
-        long totalCount = query.fetchCount();
+        long totalCount = baseQuery.fetchCount();
+
 
         return PageResponseDTO.<UserDTO>withAll()
-                .dtoList(new ArrayList<>(userMap.values()))
+                .dtoList(userList)
                 .totalCount(totalCount)
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
-
 
 
 
