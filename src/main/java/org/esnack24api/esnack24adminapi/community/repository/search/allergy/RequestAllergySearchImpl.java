@@ -27,7 +27,8 @@ public class RequestAllergySearchImpl extends QuerydslRepositorySupport implemen
 
         JPQLQuery<RequestAllergyEntity> query = from(requestAllergy);
 
-        query.where(requestAllergy.cano.gt(0));
+        query.where(requestAllergy.cano.gt(0)
+                .and(requestAllergy.cadelete.eq(false)));
 
         this.getQuerydsl().applyPagination(pageable, query);
 
