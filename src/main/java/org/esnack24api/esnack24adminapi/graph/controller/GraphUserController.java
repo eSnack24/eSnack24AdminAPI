@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,30 +35,31 @@ public class GraphUserController {
         return ResponseEntity.ok(countryCounts);
     }
 
-    @GetMapping("/age")
-    public ResponseEntity<Map<Integer, Long>> getKoreanAgeCounts() {
+    @GetMapping("age")
+    public ResponseEntity<Map<String, Long>> getKoreanAgeCounts() {
         List<Object[]> results = graphUserService.getBirthCounts();
-        Map<Integer, Long> ageCounts = new HashMap<>();
+        Map<String, Long> ageCounts = new HashMap<>();
 
         for (Object[] row : results) {
-
             Timestamp birthTimestamp = (Timestamp) row[0];
             LocalDate birthDate = birthTimestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
             LocalDate today = LocalDate.now();
-
             int age = today.getYear() - birthDate.getYear() + 1;
             if (today.isBefore(birthDate.withYear(today.getYear()))) {
                 age--;
             }
 
-            Long count = (Long) row[1];
+            int ageGroupStart = (age / 10) * 10;
+            String ageGroup = ageGroupStart + "대";
 
-            ageCounts.put(age, count);
+            Long count = (Long) row[1];
+            ageCounts.put(ageGroup, ageCounts.getOrDefault(ageGroup, 0L) + count);
         }
 
         return ResponseEntity.ok(ageCounts);
     }
+
 
     @GetMapping("allergy")
     public ResponseEntity<Map<String, Long>> getAllergyCounts() {
