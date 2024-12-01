@@ -28,7 +28,8 @@ public class RequestProductSearchImpl extends QuerydslRepositorySupport implemen
 
         JPQLQuery<RequestProductEntity> query = from(requestProduct);
 
-        query.where(requestProduct.cpno.gt(0));
+        query.where(requestProduct.cpno.gt(0)
+                .and(requestProduct.cpdelete.eq(false)));
 
         this.getQuerydsl().applyPagination(pageable, query);
 
