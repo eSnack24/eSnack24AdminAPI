@@ -48,11 +48,11 @@ public class TokenController {
 
         log.info(adminDTO);
 
-        String admid = adminDTO.getAdmid();
         String admrole = adminDTO.getAdmrole();
+        Long admno = adminDTO.getAdmno();
 
         Map<String, Object> claimMap =
-                Map.of("admid", admid, "role", admrole);
+                Map.of("admno", admno, "role", admrole);
 
         String accessToken = jwtUtil.createToken(claimMap, accessTime);
         String refreshToken = jwtUtil.createToken(claimMap, refreshTime);
@@ -60,7 +60,10 @@ public class TokenController {
         TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
         tokenResponseDTO.setAccessToken(accessToken);
         tokenResponseDTO.setRefreshToken(refreshToken);
-        tokenResponseDTO.setAdmid(admid);
+        tokenResponseDTO.setAdmno(admno);
+
+        log.info("=-=-=-==-=-=-=-=-=-");
+        log.info(tokenResponseDTO);
 
         return ResponseEntity.ok(tokenResponseDTO);
     }
@@ -89,11 +92,11 @@ public class TokenController {
 
             Map<String, Object> payload = jwtUtil.validateToken(accessTokenStr);
 
-            String admid = payload.get("admid").toString();
+            Long admno = ((Number) payload.get("admno")).longValue();
 
             TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
             tokenResponseDTO.setAccessToken(accessTokenStr);
-            tokenResponseDTO.setAdmid(admid);
+            tokenResponseDTO.setAdmno(admno);
             tokenResponseDTO.setRefreshToken(refreshToken);
 
             return ResponseEntity.ok(tokenResponseDTO);
@@ -106,14 +109,14 @@ public class TokenController {
 
                 Map<String, Object> payload = jwtUtil.validateToken(refreshToken);
 
-                String admid = payload.get("admid").toString();
+                Long admno = ((Number) payload.get("admno")).longValue();
                 String admrole = payload.get("amdrole").toString();
                 String newAccessToken = null;
                 String newRefreshToken = null;
 
                 if(alwaysNew){
 
-                    Map<String, Object> claimMap = Map.of("admid", admid, "admrole", admrole);
+                    Map<String, Object> claimMap = Map.of("admno", admno, "admrole", admrole);
                     newAccessToken = jwtUtil.createToken(claimMap, accessTime);
                     newRefreshToken = jwtUtil.createToken(claimMap, refreshTime);
                 }
@@ -121,7 +124,7 @@ public class TokenController {
                 TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
                 tokenResponseDTO.setAccessToken(newAccessToken);
                 tokenResponseDTO.setRefreshToken(newRefreshToken);
-                tokenResponseDTO.setAdmid(admid);
+                tokenResponseDTO.setAdmno(admno);
 
                 return ResponseEntity.ok(tokenResponseDTO);
             }catch(ExpiredJwtException ex2) {
@@ -129,5 +132,23 @@ public class TokenController {
                 throw AdminExceptions.REQUIRE_SIGN_IN.get();
             }
         }
+    }
+
+    @PostMapping("deleteToken")
+    public ResponseEntity<TokenResponseDTO> deleteToken(
+            @RequestParam Long admno) {
+
+        Map<String, Object> claimMap =
+                Map.of("admno", admno);
+
+        String accessToken = jwtUtil.createToken(claimMap, 0);
+        String refreshToken = jwtUtil.createToken(claimMap, 0);
+
+        TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
+        tokenResponseDTO.setAccessToken(accessToken);
+        tokenResponseDTO.setRefreshToken(refreshToken);
+        tokenResponseDTO.setAdmno(admno);
+
+        return ResponseEntity.ok(tokenResponseDTO);
     }
 }
