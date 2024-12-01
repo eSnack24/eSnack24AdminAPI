@@ -6,7 +6,7 @@ import lombok.Data;
 public class FAQListDTO {
 
     private Long fno;
-    private Long admno;
+    private String admname;
     private String ftitle;
     private String fcategory;
     private boolean fdelete;
