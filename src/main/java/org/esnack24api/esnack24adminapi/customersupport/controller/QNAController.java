@@ -48,4 +48,13 @@ public class QNAController {
 
         return ResponseEntity.ok(qnaService.setQNAAnswer(admno, qnaAnswerDTO));
     }
+
+    @GetMapping("statuslist/{qstatus}")
+    public ResponseEntity<PageResponseDTO<QNAListDTO>> getQNAStatusList(@PathVariable("qstatus") boolean qstatus, PageRequestDTO pageRequestDTO) {
+        log.info("getQNAList");
+
+        return ResponseEntity.ok(qnaService.QNAStatusList(qstatus, pageRequestDTO));
+
+    }
+
 }
