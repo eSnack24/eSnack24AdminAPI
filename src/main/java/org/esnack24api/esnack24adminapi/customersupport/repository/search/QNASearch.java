@@ -11,4 +11,6 @@ public interface QNASearch {
     PageResponseDTO<QNAListDTO> qnaList(PageRequestDTO pageRequestDTO);
 
     QNADetailDTO qnaDetail(Long pno);
+
+    PageResponseDTO<QNAListDTO> qnaStatusList(Boolean status, PageRequestDTO pageRequestDTO);
 }

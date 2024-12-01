@@ -79,4 +79,12 @@ public class QNAService {
         return "QNA not found";
     }
 
+    public PageResponseDTO<QNAListDTO> QNAStatusList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        log.info("QNA List service");
+
+        return qnaRepository.qnaStatusList(status, pageRequestDTO);
+
+    }
+
 }
