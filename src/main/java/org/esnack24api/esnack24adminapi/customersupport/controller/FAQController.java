@@ -2,6 +2,8 @@ package org.esnack24api.esnack24adminapi.customersupport.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.faq.*;
 import org.esnack24api.esnack24adminapi.customersupport.service.FAQService;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,11 @@ public class FAQController {
     private final FAQService faqService;
 
     @GetMapping("list")
-    public ResponseEntity<List<FAQListDTO>> faqList(){
+    public ResponseEntity<PageResponseDTO<FAQListDTO>> faqList(PageRequestDTO pageRequestDTO){
         log.info("Retrieving faq list");
 
 
-        return ResponseEntity.ok(faqService.getFAQs());
+        return ResponseEntity.ok(faqService.getFAQs(pageRequestDTO));
     }
 
     @GetMapping("detail/{fno}")
