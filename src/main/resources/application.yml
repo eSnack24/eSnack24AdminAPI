@@ -38,6 +38,18 @@ org:
     upload:
       path: upload
 
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+
 logging:
   level:
     org.springframework.security.web: TRACE
