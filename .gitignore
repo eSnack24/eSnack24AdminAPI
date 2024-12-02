@@ -36,4 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-.esnack24-e3428-firebase-adminsdk-gxg07-e66828cd01.json
+src/main/resources/firebase/esnack24-e3428-firebase-adminsdk-gxg07-e66828cd01.json
