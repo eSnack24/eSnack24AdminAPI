@@ -14,5 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductAllergySearchDTO extends PageRequestDTO {
 
+    private String ptitle_ko;
     private List<Long> allergySelectList;
 }
