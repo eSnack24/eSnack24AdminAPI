@@ -1,6 +1,7 @@
 package org.esnack24api.esnack24adminapi.customersupport.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
@@ -47,4 +48,13 @@ public class QNAController {
 
         return ResponseEntity.ok(qnaService.setQNAAnswer(admno, qnaAnswerDTO));
     }
+
+    @GetMapping("statuslist/{qstatus}")
+    public ResponseEntity<PageResponseDTO<QNAListDTO>> getQNAStatusList(@PathVariable("qstatus") boolean qstatus, PageRequestDTO pageRequestDTO) {
+        log.info("getQNAList");
+
+        return ResponseEntity.ok(qnaService.QNAStatusList(qstatus, pageRequestDTO));
+
+    }
+
 }

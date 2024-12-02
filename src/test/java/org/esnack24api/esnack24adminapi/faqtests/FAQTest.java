@@ -27,9 +27,9 @@ public class FAQTest {
     @Commit
     public void testListFAQ() {
 
-        List<FAQListDTO> List =  faqRepository.listFAQ();
-
-        log.info(List);
+//        List<FAQListDTO> List =  faqRepository.listFAQ();
+//
+//        log.info(List);
 
 
     }

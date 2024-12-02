@@ -92,7 +92,8 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
         query.leftJoin(product).on(product.eq(qna.product));
         query.leftJoin(admin).on(admin.eq(qna.admin));
 
-        query.where(qna.qno.gt(0));
+        query.where(qna.qno.eq(pno));
+
 
         JPQLQuery<QNADetailDTO> tupleQuery = query.select(
                 Projections.bean(QNADetailDTO.class,
@@ -114,4 +115,60 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
 
         return list;
     }
+
+    @Override
+    public PageResponseDTO<QNAListDTO> qnaStatusList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("qno").ascending());
+
+        QQNAEntity qna = QQNAEntity.qNAEntity;
+        QUserEntity user = QUserEntity.userEntity;
+        QProductEntity product = QProductEntity.productEntity;
+        QAdminEntity admin = QAdminEntity.adminEntity;
+
+        JPQLQuery<QNAEntity> query = from(qna);
+
+        query.leftJoin(user).on(user.eq(qna.user));
+        query.leftJoin(product).on(product.eq(qna.product));
+        query.leftJoin(admin).on(admin.eq(qna.admin));
+
+        query.where(qna.qno.gt(0));
+        query.where(qna.qdelete.isFalse());
+
+        if (status != null) {
+            query.where(qna.qstatus.eq(status));
+        }
+
+
+        this.getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<QNAListDTO> tupleQuery = query.select(
+                Projections.bean(QNAListDTO.class,
+                        qna.qno,
+                        qna.user.uemail,
+                        qna.product.ptitle_ko,
+                        qna.admin.admname,
+                        qna.qtitle,
+                        qna.qdelete,
+                        qna.qregdate,
+                        qna.qmoddate,
+                        qna.qstatus
+                )
+        );
+
+        List<QNAListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<QNAListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+
+    }
+
 }

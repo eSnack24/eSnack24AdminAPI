@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.repository.AdminRepository;
+import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
+import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.customersupport.domain.FAQEntity;
 import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQAddDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQDetailDTO;
 import org.esnack24api.esnack24adminapi.customersupport.dto.faq.FAQListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.esnack24api.esnack24adminapi.customersupport.repository.FAQRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +28,10 @@ public class FAQService {
     private final FAQRepository faqRepository;
     private final AdminRepository adminRepository;
 
-    public List<FAQListDTO> getFAQs() {
-        return faqRepository.listFAQ();
+    public PageResponseDTO<FAQListDTO> getFAQs(PageRequestDTO pageRequestDTO) {
+        return faqRepository.listFAQ(pageRequestDTO);
     }
+
 
     public FAQDetailDTO getDetailFAQs(Long fno){
         return faqRepository.detailFAQ(fno);
