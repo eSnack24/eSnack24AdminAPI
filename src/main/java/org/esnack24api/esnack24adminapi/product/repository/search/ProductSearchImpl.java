@@ -237,12 +237,13 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                         .where(product.pdelete.eq(false))
                         .groupBy(product.pno);
             } else {
-                // 알레르기 ID가 없으면 모든 제품 조회
+                // 알레르기 ID가 없으면 알레르기 정보가 없는 제품만 조회
                 query = from(product)
                         .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                         .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
                         .where(product.pdelete.eq(false))
-                        .groupBy(product.pno);
+                        .groupBy(product.pno)
+                        .having(productAllergy.allergy.ano.count().eq(0L)); // 알레르기 정보가 없는 제품만 선택
             }
 
             // 제품명 검색 조건 추가
