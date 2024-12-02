@@ -110,7 +110,7 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
 
         query.groupBy(admin);
 
-        if (order_by.equals("asc")) {
+        if (order_by.equals("ASC")) {
             query.orderBy(qna.count().asc());
         } else {
             query.orderBy(qna.count().desc());
