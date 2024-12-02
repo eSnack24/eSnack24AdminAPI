@@ -8,6 +8,7 @@ import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.dto.*;
 import org.esnack24api.esnack24adminapi.product.service.ProductService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +48,8 @@ public class ProductController {
     }
 
     // 상품 추가
-    @PostMapping("/add")
-    public ResponseEntity<String> addProduct(@RequestBody ProductAddDTO productAddDTO) {
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> addProduct(@ModelAttribute ProductAddDTO productAddDTO) {
         log.info("Adding new product");
 
         return ResponseEntity.ok(productService.addProduct(productAddDTO));

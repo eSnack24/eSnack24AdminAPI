@@ -10,10 +10,14 @@ import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
 import org.esnack24api.esnack24adminapi.product.dto.*;
 import org.esnack24api.esnack24adminapi.product.repository.ProductAllergyRepository;
 import org.esnack24api.esnack24adminapi.product.repository.ProductRepository;
+import org.esnack24api.esnack24adminapi.upload.util.S3Uploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Log4j2
@@ -22,6 +26,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductAllergyService productAllergyService;
+    private final S3Uploader s3Uploader;
 
     // 상품 리스트 조회
     @Transactional(readOnly = true)
@@ -50,22 +55,44 @@ public class ProductService {
     // 상품 추가
     @Transactional
     public String addProduct(ProductAddDTO productAddDTO) {
-        log.info("addProduct");
+        try {
+            // 1. 파일 이름 생성 (UUID 사용)
+            String originalFileName = productAddDTO.getFile().getOriginalFilename();
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String savedFileName = UUID.randomUUID() + extension;
 
-        ProductEntity productEntity = ProductEntity.builder()
-                .ptitle_ko(productAddDTO.getPtitle_ko())
-                .pcontent_ko(productAddDTO.getPcontent_ko())
-                .pcategory_ko(productAddDTO.getPcategory_ko())
-                .price(productAddDTO.getPrice())
-                .pqty(productAddDTO.getPqty())
-                .pfilename(productAddDTO.getPfilename())
-                .build();
+            // 2. 로컬 저장 (원본 + 썸네일)
+            String savePath = "C:\\snack\\demo\\";
 
-        ProductEntity savedProduct = productRepository.save(productEntity);
+            // 원본 이미지 저장
+            File originalFile = new File(savePath + savedFileName);
+            productAddDTO.getFile().transferTo(originalFile);
 
-        productAllergyService.saveProductAllergies(savedProduct, productAddDTO.getAllergySelectList());
+            // 썸네일 이미지 저장
+            File thumbnailFile = new File(savePath + "s_" + savedFileName);
+            productAddDTO.getFile().transferTo(thumbnailFile);
 
-        return "상품이 등록되었습니다.";
+            // 3. S3 업로드
+            s3Uploader.upload(savePath + savedFileName);
+
+            // 4. 제품 정보 저장
+            ProductEntity productEntity = ProductEntity.builder()
+                    .ptitle_ko(productAddDTO.getPtitle_ko())
+                    .pcontent_ko(productAddDTO.getPcontent_ko())
+                    .pcategory_ko(productAddDTO.getPcategory_ko())
+                    .price(productAddDTO.getPrice())
+                    .pqty(productAddDTO.getPqty())
+                    .pfilename(savedFileName)
+                    .build();
+
+            ProductEntity savedProduct = productRepository.save(productEntity);
+            productAllergyService.saveProductAllergies(savedProduct, productAddDTO.getAllergySelectList());
+
+            return "상품이 등록되었습니다.";
+        } catch (IOException e) {
+            log.error("파일 업로드 실패", e);
+            throw new RuntimeException("상품 등록 중 오류가 발생했습니다.");
+        }
     }
 
     // 상품 수정
