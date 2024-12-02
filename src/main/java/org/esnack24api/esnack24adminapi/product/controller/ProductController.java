@@ -56,22 +56,20 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PutMapping("/edit/{pno}")
-    public ResponseEntity<String> editProduct(@PathVariable Long pno, @RequestBody ProductEditDTO productEditDTO) {
+    @PutMapping(value = "/edit/{pno}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> editProduct(
+            @PathVariable Long pno,
+            @ModelAttribute ProductEditDTO productEditDTO
+    ) {
         log.info("Editing product - pno: " + pno);
-
-        String result = productService.editProduct(pno, productEditDTO);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(productService.editProduct(pno, productEditDTO));
     }
 
     // 상품 삭제
     @DeleteMapping("/delete/{pno}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long pno) {
+
         log.info("Deleting product - pno: " + pno);
-
-        String result = productService.deleteProduct(pno);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(productService.deleteProduct(pno));
     }
 }
