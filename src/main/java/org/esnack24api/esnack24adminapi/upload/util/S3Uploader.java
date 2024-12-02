@@ -33,9 +33,15 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+        // 원본 이미지 업로드
+        amazonS3Client.putObject(new PutObjectRequest(bucket, "product/" + fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+
+        // 썸네일 이미지 업로드
+        amazonS3Client.putObject(new PutObjectRequest(bucket, "product/s_" + fileName, uploadFile)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        return amazonS3Client.getUrl(bucket, "product/" + fileName).toString();
     }
 
     // S3 업로드 후 원본(로컬) 파일 삭제
