@@ -38,13 +38,11 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
 
         QQNAEntity qna = QQNAEntity.qNAEntity;
         QUserEntity user = QUserEntity.userEntity;
-        QProductEntity product = QProductEntity.productEntity;
         QAdminEntity admin = QAdminEntity.adminEntity;
 
         JPQLQuery<QNAEntity> query = from(qna);
 
         query.leftJoin(user).on(user.eq(qna.user));
-        query.leftJoin(product).on(product.eq(qna.product));
         query.leftJoin(admin).on(admin.eq(qna.admin));
 
         query.where(qna.qno.gt(0));
@@ -56,7 +54,6 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
                 Projections.bean(QNAListDTO.class,
                         qna.qno,
                         qna.user.uemail,
-                        qna.product.ptitle_ko,
                         qna.admin.admname,
                         qna.qtitle,
                         qna.qdelete,
@@ -83,13 +80,11 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
 
         QQNAEntity qna = QQNAEntity.qNAEntity;
         QUserEntity user = QUserEntity.userEntity;
-        QProductEntity product = QProductEntity.productEntity;
         QAdminEntity admin = QAdminEntity.adminEntity;
 
         JPQLQuery<QNAEntity> query = from(qna);
 
         query.leftJoin(user).on(user.eq(qna.user));
-        query.leftJoin(product).on(product.eq(qna.product));
         query.leftJoin(admin).on(admin.eq(qna.admin));
 
         query.where(qna.qno.eq(pno));
@@ -101,7 +96,6 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
                         qna.qtitle,
                         qna.qcontent,
                         qna.qanswer,
-                        qna.product.ptitle_ko,
                         qna.user.uemail,
                         qna.admin.admname,
                         qna.qstatus,
@@ -126,13 +120,11 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
 
         QQNAEntity qna = QQNAEntity.qNAEntity;
         QUserEntity user = QUserEntity.userEntity;
-        QProductEntity product = QProductEntity.productEntity;
         QAdminEntity admin = QAdminEntity.adminEntity;
 
         JPQLQuery<QNAEntity> query = from(qna);
 
         query.leftJoin(user).on(user.eq(qna.user));
-        query.leftJoin(product).on(product.eq(qna.product));
         query.leftJoin(admin).on(admin.eq(qna.admin));
 
         query.where(qna.qno.gt(0));
@@ -149,7 +141,6 @@ public class QNASearchImpl extends QuerydslRepositorySupport implements QNASearc
                 Projections.bean(QNAListDTO.class,
                         qna.qno,
                         qna.user.uemail,
-                        qna.product.ptitle_ko,
                         qna.admin.admname,
                         qna.qtitle,
                         qna.qdelete,

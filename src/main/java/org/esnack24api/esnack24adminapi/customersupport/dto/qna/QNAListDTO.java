@@ -11,7 +11,6 @@ public class QNAListDTO {
 
     private Long qno;
     private String uemail; // user
-    private String ptitle_ko; // product
     private String admname; // admin
 
     private String qtitle;
