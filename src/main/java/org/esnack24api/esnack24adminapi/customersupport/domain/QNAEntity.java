@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ToString(exclude = {"product", "user", "admin"})
+@ToString(exclude = { "user", "admin"})
 @Table(name = "tbl_qna")
 public class QNAEntity {
 
@@ -31,9 +31,7 @@ public class QNAEntity {
     @JoinColumn(name = "uno")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pno")
-    private ProductEntity product;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admno")
