@@ -31,4 +31,6 @@ public class AdminEntity {
     private Timestamp admregdate;
 
     private Timestamp admmoddate;
+
+    private String token;
 }
