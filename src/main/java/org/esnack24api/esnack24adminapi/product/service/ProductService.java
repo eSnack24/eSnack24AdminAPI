@@ -49,6 +49,11 @@ public class ProductService {
         String savedFileName = UUID.randomUUID() + fileExtension;
         byte[] fileBytes = Base64.getDecoder().decode(base64Data);
 
+        // 로컬 저장 경로 설정
+        String uploadPath = "C:\\snack\\demo\\";
+        Path localPath = Paths.get(uploadPath + savedFileName);
+        Path localthumbnailPath = Paths.get(uploadPath + "s_" + savedFileName);
+
         // 임시 파일 생성 (UUID 파일명 그대로 사용)
         Path tempFile = Files.createTempFile("temp_", fileExtension);
         Files.write(tempFile, fileBytes);
@@ -56,6 +61,13 @@ public class ProductService {
         try {
             // S3에 UUID 파일명으로 업로드
             s3Uploader.upload(tempFile.toString(), savedFileName);
+
+            // 로컬 폴더에 이미지 저장
+            Files.write(localPath, fileBytes);
+            Thumbnails.of(localPath.toFile())
+                    .size(200, 133)
+                    .toFile(localthumbnailPath.toFile());
+
             return savedFileName;
         } finally {
             Files.deleteIfExists(tempFile);
