@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class FCMRequestDTO {
 
-    private String token;
+    private List<String> token;
     private String title;
     private String body;
 }
