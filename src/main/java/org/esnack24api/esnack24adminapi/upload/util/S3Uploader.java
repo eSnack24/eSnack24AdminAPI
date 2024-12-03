@@ -22,12 +22,14 @@ public class S3Uploader {
     public String bucket;
 
     // S3 파일 업로드하기
-    public String upload(String filePath) {
+    public String upload(String filePath, String savedFileName) {
 
         File targetFile = new File(filePath);
 
-        String uploadImageUrl = putS3(targetFile, targetFile.getName()); // S3로 업로드
+        String uploadImageUrl = putS3(targetFile, savedFileName);
+
         removeOriginalFile(targetFile);
+
         return uploadImageUrl;
     }
 

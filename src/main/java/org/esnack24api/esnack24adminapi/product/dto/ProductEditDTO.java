@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductEditDTO {
-    private MultipartFile file;
 
     private Long pno;
     private int price;

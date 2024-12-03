@@ -48,18 +48,18 @@ public class ProductController {
     }
 
     // 상품 추가
-    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> addProduct(@ModelAttribute ProductAddDTO productAddDTO) {
-        log.info("Adding new product");
+    @PostMapping("/add")
+    public ResponseEntity<String> addProduct(@RequestBody ProductAddDTO productAddDTO) {
 
+        log.info("Adding new product");
         return ResponseEntity.ok(productService.addProduct(productAddDTO));
     }
 
     // 상품 수정
-    @PutMapping(value = "/edit/{pno}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/edit/{pno}")
     public ResponseEntity<String> editProduct(
             @PathVariable Long pno,
-            @ModelAttribute ProductEditDTO productEditDTO
+            @RequestBody ProductEditDTO productEditDTO
     ) {
         log.info("Editing product - pno: " + pno);
         return ResponseEntity.ok(productService.editProduct(pno, productEditDTO));

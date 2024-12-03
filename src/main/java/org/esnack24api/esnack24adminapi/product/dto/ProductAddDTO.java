@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAddDTO {
-    private MultipartFile file;
 
     // 다국어 제품명은 PapagoAPI가 담당
     private String ptitle_ko;
