@@ -2,15 +2,12 @@ package org.esnack24api.esnack24adminapi.product.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnails;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
-import org.esnack24api.esnack24adminapi.common.page.PageRequest;
-import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.domain.ProductEntity;
 import org.esnack24api.esnack24adminapi.product.dto.*;
-import org.esnack24api.esnack24adminapi.product.repository.ProductAllergyRepository;
 import org.esnack24api.esnack24adminapi.product.repository.ProductRepository;
+import org.esnack24api.esnack24adminapi.upload.service.ImageUploadService;
 import org.esnack24api.esnack24adminapi.upload.util.S3Uploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Log4j2
@@ -30,49 +25,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductAllergyService productAllergyService;
+    private final ImageUploadService imageUploadService;
     private final S3Uploader s3Uploader;
-
-    private String saveBase64File(String base64File) throws IOException {
-        String base64Data = base64File;
-        String fileExtension = "";
-
-        if (base64Data.contains(",")) {
-            String[] parts = base64Data.split(",");
-            String mimeType = parts[0].split(";")[0].split(":")[1];
-            fileExtension = "." + mimeType.split("/")[1];
-            base64Data = parts[1];
-        }
-
-        base64Data = base64Data.replaceAll("\\s+", "");
-
-        // UUID 파일명 생성
-        String savedFileName = UUID.randomUUID() + fileExtension;
-        byte[] fileBytes = Base64.getDecoder().decode(base64Data);
-
-        // 로컬 저장 경로 설정
-        String uploadPath = "C:\\snack\\demo\\";
-        Path localPath = Paths.get(uploadPath + savedFileName);
-        Path localthumbnailPath = Paths.get(uploadPath + "s_" + savedFileName);
-
-        // 임시 파일 생성 (UUID 파일명 그대로 사용)
-        Path tempFile = Files.createTempFile("temp_", fileExtension);
-        Files.write(tempFile, fileBytes);
-
-        try {
-            // S3에 UUID 파일명으로 업로드
-            s3Uploader.upload(tempFile.toString(), savedFileName);
-
-            // 로컬 폴더에 이미지 저장
-            Files.write(localPath, fileBytes);
-            Thumbnails.of(localPath.toFile())
-                    .size(200, 133)
-                    .toFile(localthumbnailPath.toFile());
-
-            return savedFileName;
-        } finally {
-            Files.deleteIfExists(tempFile);
-        }
-    }
 
     // 상품 리스트 조회
     @Transactional(readOnly = true)
@@ -103,7 +57,7 @@ public class ProductService {
     public String addProduct(ProductAddDTO productAddDTO) {
         try {
             // Base64 파일을 S3에 업로드하고 파일명 받기
-            String savedFileName = saveBase64File(productAddDTO.getPfilename());
+            String savedFileName = imageUploadService.uploadBase64File(productAddDTO.getPfilename());
 
             // 제품 엔티티 생성
             ProductEntity productEntity = ProductEntity.builder()
@@ -131,49 +85,80 @@ public class ProductService {
     // 상품 수정
     @Transactional
     public String editProduct(Long pno, ProductEditDTO productEditDTO) {
-        log.info("editProduct pno" + pno);
+        try {
+            Optional<ProductEntity> productOptional = productRepository.findById(pno);
+            if(productOptional.isPresent()) {
+                ProductEntity productEntity = productOptional.get();
 
-        Optional<ProductEntity> productOptional = productRepository.findById(pno);
-        if(productOptional.isPresent()) {
-            ProductEntity productEntity = productOptional.get();
+                // 이미지가 변경된 경우
+                if (productEditDTO.getPfilename() != null && !productEditDTO.getPfilename().isEmpty()) {
+                    // 기존 이미지 삭제
+                    String oldFileName = productEntity.getPfilename();
+                    deleteExistingFiles(oldFileName);
 
-            // 기본 정보 설정
-            productEntity.setPrice(productEditDTO.getPrice());
-            productEntity.setPqty(productEditDTO.getPqty());
-            productEntity.setPfilename(productEditDTO.getPfilename());
+                    // 새 이미지 업로드
+                    String savedFileName = imageUploadService.uploadBase64File(productEditDTO.getPfilename());
+                    productEntity.setPfilename(savedFileName);
+                }
 
-            // 한국어 정보 설정
-            productEntity.setPtitle_ko(productEditDTO.getPtitle_ko());
-            productEntity.setPcontent_ko(productEditDTO.getPcontent_ko());
-            productEntity.setPcategory_ko(productEditDTO.getPcategory_ko());
+                // 기본 정보 설정
+                productEntity.setPrice(productEditDTO.getPrice());
+                productEntity.setPqty(productEditDTO.getPqty());
 
-            // 영어 정보 설정
-            productEntity.setPtitle_en(productEditDTO.getPtitle_en());
-            productEntity.setPcontent_en(productEditDTO.getPcontent_en());
-            productEntity.setPcategory_en(productEditDTO.getPcategory_en());
+                // 한국어 정보 설정
+                productEntity.setPtitle_ko(productEditDTO.getPtitle_ko());
+                productEntity.setPcontent_ko(productEditDTO.getPcontent_ko());
+                productEntity.setPcategory_ko(productEditDTO.getPcategory_ko());
 
-            // 일본어 정보 설정
-            productEntity.setPtitle_ja(productEditDTO.getPtitle_ja());
-            productEntity.setPcontent_ja(productEditDTO.getPcontent_ja());
-            productEntity.setPcategory_ja(productEditDTO.getPcategory_ja());
+                // 영어 정보 설정
+                productEntity.setPtitle_en(productEditDTO.getPtitle_en());
+                productEntity.setPcontent_en(productEditDTO.getPcontent_en());
+                productEntity.setPcategory_en(productEditDTO.getPcategory_en());
 
-            // 중국어 정보 설정
-            productEntity.setPtitle_zh(productEditDTO.getPtitle_zh());
-            productEntity.setPcontent_zh(productEditDTO.getPcontent_zh());
-            productEntity.setPcategory_zh(productEditDTO.getPcategory_zh());
+                // 일본어 정보 설정
+                productEntity.setPtitle_ja(productEditDTO.getPtitle_ja());
+                productEntity.setPcontent_ja(productEditDTO.getPcontent_ja());
+                productEntity.setPcategory_ja(productEditDTO.getPcategory_ja());
 
-            productRepository.save(productEntity);
+                // 중국어 정보 설정
+                productEntity.setPtitle_zh(productEditDTO.getPtitle_zh());
+                productEntity.setPcontent_zh(productEditDTO.getPcontent_zh());
+                productEntity.setPcategory_zh(productEditDTO.getPcategory_zh());
 
-            // 알레르기 정보 업데이트
-            productAllergyService.updateProductAllergies(productEntity, productEditDTO.getAllergySelectList());
+                productRepository.save(productEntity);
 
-            return "상품이 수정되었습니다.";
-        } else {
-            return "해당 제품을 찾을 수 없습니다.";
+                // 알레르기 정보 업데이트
+                productAllergyService.updateProductAllergies(productEntity, productEditDTO.getAllergySelectList());
+
+                return "상품이 수정되었습니다.";
+            } else {
+                return "해당 제품을 찾을 수 없습니다.";
+            }
+        } catch (Exception e) {
+            log.error("상품 수정 실패", e);
+            throw new RuntimeException("상품 수정 중 오류가 발생했습니다.", e);
         }
     }
 
-    //상품 논리 삭제
+    private void deleteExistingFiles(String fileName) {
+        try {
+            // S3에서 파일 삭제
+            s3Uploader.removeS3File("product/" + fileName);
+            s3Uploader.removeS3File("product/s_" + fileName);
+
+            // 로컬 파일 삭제
+            String uploadPath = "C:\\snack\\demo\\";
+            Path originalPath = Paths.get(uploadPath + fileName);
+            Path thumbnailPath = Paths.get(uploadPath + "s_" + fileName);
+
+            Files.deleteIfExists(originalPath);
+            Files.deleteIfExists(thumbnailPath);
+        } catch (IOException e) {
+            log.error("파일 삭제 실패", e);
+        }
+    }
+
+    //상품 데이터 논리 삭제(이미지는 물리 삭제)
     @Transactional
     public String deleteProduct(Long pno) {
         log.info("deleteProduct pno: " + pno);
@@ -182,11 +167,32 @@ public class ProductService {
         if (productOptional.isPresent()) {
             ProductEntity productEntity = productOptional.get();
 
-            productEntity.setPdelete(true);
+            try {
+                // 기존 이미지 파일 삭제
+                String fileName = productEntity.getPfilename();
+                if (fileName != null && !fileName.isEmpty()) {
+                    // S3에서 파일 삭제
+                    s3Uploader.removeS3File("product/" + fileName);
+                    s3Uploader.removeS3File("product/s_" + fileName);
 
-            productRepository.save(productEntity);
+                    // 로컬 파일 삭제
+                    String uploadPath = "C:\\snack\\demo\\";
+                    Path originalPath = Paths.get(uploadPath + fileName);
+                    Path thumbnailPath = Paths.get(uploadPath + "s_" + fileName);
 
-            return "상품이 삭제되었습니다.";
+                    Files.deleteIfExists(originalPath);
+                    Files.deleteIfExists(thumbnailPath);
+                }
+
+                // 논리적 삭제 처리
+                productEntity.setPdelete(true);
+                productRepository.save(productEntity);
+
+                return "상품이 삭제되었습니다.";
+            } catch (Exception e) {
+                log.error("상품 삭제 실패", e);
+                throw new RuntimeException("상품 삭제 중 오류가 발생했습니다.", e);
+            }
         } else {
             return "해당 제품을 찾을 수 없습니다.";
         }
