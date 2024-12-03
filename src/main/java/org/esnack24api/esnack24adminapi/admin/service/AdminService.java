@@ -1,6 +1,7 @@
 
 package org.esnack24api.esnack24adminapi.admin.service;
 
+import com.google.api.client.auth.oauth2.TokenRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
@@ -133,5 +134,28 @@ public class AdminService {
     public PageResponseDTO<AdminWorkListDTO> getAdminWorkList(String order_by, PageRequestDTO pageRequestDTO) {
 
         return adminRepository.adminWorkList(order_by, pageRequestDTO);
+    }
+
+    public String updateToken(FCMTokenRequestDTO tokenRequest) {
+        // 로그인한 관리자의 ID로 해당 관리자 찾기
+        Optional<AdminEntity> adminOptional = adminRepository.findById(tokenRequest.getAdmno());
+
+        if (adminOptional.isPresent()) {
+            // 관리자 엔티티 가져오기
+            AdminEntity admin = adminOptional.get();
+
+            // 기존의 token을 null로 초기화
+            admin.setToken(null); // 기존 토큰 지우기
+
+            // 새로 받은 token으로 갱신
+            admin.setToken(tokenRequest.getToken());
+
+            // 변경된 admin 저장
+            adminRepository.save(admin);
+
+            return "Successfully token updated";
+        }
+
+        return "Admin not found";
     }
 }
