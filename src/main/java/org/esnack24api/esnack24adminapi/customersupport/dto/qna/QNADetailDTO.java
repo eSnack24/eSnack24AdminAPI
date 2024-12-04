@@ -15,8 +15,6 @@ public class QNADetailDTO {
 
     private String qanswer;
 
-    private String ptitle_ko; // product
-
     private String uemail; // user
 
     private String admname; // admin
