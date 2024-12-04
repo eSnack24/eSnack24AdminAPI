@@ -61,4 +61,60 @@ public class GraphProductController {
 
         return ResponseEntity.ok(distributions);
     }
+
+    @GetMapping("stock-status")
+    public ResponseEntity<Map<String, Long>> getStockStatus() {
+        List<Object[]> results = graphProductService.getProductStockStatus();
+        Map<String, Long> stockStatus = new HashMap<>();
+
+        for (Object[] row : results) {
+            String status = (String) row[0];
+            Long count = (Long) row[1];
+            stockStatus.put(status, count);
+        }
+
+        return ResponseEntity.ok(stockStatus);
+    }
+
+    @GetMapping("star-count")
+    public ResponseEntity<Map<String, Long>> getStarCount() {
+        List<Object[]> results = graphProductService.getProductStarCounts();
+        Map<String, Long> starCounts = new HashMap<>();
+
+        for (Object[] row : results) {
+            String star = String.valueOf(row[0]);
+            Long count = (Long) row[1];
+            starCounts.put(star, count);
+        }
+
+        return ResponseEntity.ok(starCounts);
+    }
+
+    @GetMapping("cart-count")
+    public ResponseEntity<Map<String, Long>> getCartCount() {
+        List<Object[]> results = graphProductService.getProductCartCounts();
+        Map<String, Long> cartCounts = new HashMap<>();
+
+        for (Object[] row : results) {
+            String category = (String) row[0];
+            Long count = (Long) row[1];
+            cartCounts.put(category, count);
+        }
+
+        return ResponseEntity.ok(cartCounts);
+    }
+
+    @GetMapping("order-count")
+    public ResponseEntity<Map<String, Long>> getOrderCount() {
+        List<Object[]> results = graphProductService.getProductOrderCounts();
+        Map<String, Long> orderCounts = new HashMap<>();
+
+        for (Object[] row : results) {
+            String category = (String) row[0];
+            Long count = (Long) row[1];
+            orderCounts.put(category, count);
+        }
+
+        return ResponseEntity.ok(orderCounts);
+    }
 }
