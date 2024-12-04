@@ -11,6 +11,8 @@ public interface RequestAllergySearch {
 
     RequestAllergyListDTO getAllergyListById(Long cano);
 
+    PageResponseDTO<RequestAllergyListDTO> getTFAllergyList(Boolean status, PageRequestDTO pageRequestDTO);
+
 
 
 }
