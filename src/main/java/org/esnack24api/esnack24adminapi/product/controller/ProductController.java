@@ -8,6 +8,7 @@ import org.esnack24api.esnack24adminapi.common.page.PageRequest;
 import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.dto.*;
 import org.esnack24api.esnack24adminapi.product.service.ProductService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,28 +50,26 @@ public class ProductController {
     // 상품 추가
     @PostMapping("/add")
     public ResponseEntity<String> addProduct(@RequestBody ProductAddDTO productAddDTO) {
-        log.info("Adding new product");
 
+        log.info("Adding new product");
         return ResponseEntity.ok(productService.addProduct(productAddDTO));
     }
 
     // 상품 수정
     @PutMapping("/edit/{pno}")
-    public ResponseEntity<String> editProduct(@PathVariable Long pno, @RequestBody ProductEditDTO productEditDTO) {
+    public ResponseEntity<String> editProduct(
+            @PathVariable Long pno,
+            @RequestBody ProductEditDTO productEditDTO
+    ) {
         log.info("Editing product - pno: " + pno);
-
-        String result = productService.editProduct(pno, productEditDTO);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(productService.editProduct(pno, productEditDTO));
     }
 
     // 상품 삭제
     @DeleteMapping("/delete/{pno}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long pno) {
+
         log.info("Deleting product - pno: " + pno);
-
-        String result = productService.deleteProduct(pno);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(productService.deleteProduct(pno));
     }
 }

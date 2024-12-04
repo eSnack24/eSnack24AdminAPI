@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Data
@@ -11,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAddDTO {
+
     // 다국어 제품명은 PapagoAPI가 담당
     private String ptitle_ko;
     private String pcontent_ko;

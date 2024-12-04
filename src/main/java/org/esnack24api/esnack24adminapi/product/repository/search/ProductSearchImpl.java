@@ -224,15 +224,12 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
             if (allergyIds != null && !allergyIds.isEmpty()) {
                 // 알레르기 ID가 있는 경우
-
-                // 서브쿼리로 검색 조건에 맞는 제품의 pno를 가져옵니다.
                 JPQLQuery<Long> subQuery = JPAExpressions.select(productAllergy.product.pno)
                         .from(productAllergy)
                         .where(productAllergy.allergy.ano.in(allergyIds))
                         .groupBy(productAllergy.product.pno)
                         .having(productAllergy.allergy.ano.countDistinct().eq((long) allergyIds.size()));
 
-                // 메인 쿼리에서 해당 제품의 모든 알레르기 정보를 가져옵니다.
                 query = from(product)
                         .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                         .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
@@ -240,15 +237,18 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                         .where(product.pdelete.eq(false))
                         .groupBy(product.pno);
             } else {
-                // 알레르기 ID가 없으면 알레르기 정보가 없는 제품을 조회합니다.
-
-                // 모든 제품과 알레르기 정보를 left join 합니다.
+                // 알레르기 ID가 없으면 알레르기 정보가 없는 제품만 조회
                 query = from(product)
                         .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                         .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
                         .where(product.pdelete.eq(false))
                         .groupBy(product.pno)
                         .having(productAllergy.allergy.ano.count().eq(0L)); // 알레르기 정보가 없는 제품만 선택
+            }
+
+            // 제품명 검색 조건 추가
+            if (productAllergySearchDTO.getPtitle_ko() != null && !productAllergySearchDTO.getPtitle_ko().trim().isEmpty()) {
+                query.where(product.ptitle_ko.containsIgnoreCase(productAllergySearchDTO.getPtitle_ko()));
             }
 
             // DTO 매핑
@@ -278,9 +278,4 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                     .totalCount(totalCount)
                     .build();
         }
-
-
-
-
-
 }
