@@ -7,8 +7,10 @@ import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.community.domain.QRequestAllergyEntity;
 import org.esnack24api.esnack24adminapi.community.domain.RequestAllergyEntity;
 import org.esnack24api.esnack24adminapi.community.dto.RequestAllergyListDTO;
+import org.esnack24api.esnack24adminapi.customersupport.dto.qna.QNAListDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -82,5 +84,51 @@ public class RequestAllergySearchImpl extends QuerydslRepositorySupport implemen
                 .camoddate(allergy.getCamoddate())
                 .cadelete(allergy.isCadelete())
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<RequestAllergyListDTO> getTFAllergyList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("cano").ascending());
+
+        QRequestAllergyEntity requestAllergy = QRequestAllergyEntity.requestAllergyEntity;
+
+        JPQLQuery<RequestAllergyEntity> query = from(requestAllergy);
+
+        query.where(requestAllergy.cano.gt(0)
+                .and(requestAllergy.cadelete.eq(false)));
+
+        if (status != null) {
+            query.where(requestAllergy.castatus.eq(status));
+        }
+
+        this.getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<RequestAllergyListDTO> tupleQuery = query.select(
+                Projections.bean(RequestAllergyListDTO.class,
+                        requestAllergy.cano,
+                        requestAllergy.catitle,
+                        requestAllergy.caallergy,
+                        requestAllergy.caanswer,
+                        requestAllergy.cadelete,
+                        requestAllergy.caregdate,
+                        requestAllergy.camoddate,
+                        requestAllergy.castatus
+                        )
+        );
+
+        List<RequestAllergyListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<RequestAllergyListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+
     }
 }

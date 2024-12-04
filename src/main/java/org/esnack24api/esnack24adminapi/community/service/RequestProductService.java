@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
 import org.esnack24api.esnack24adminapi.community.domain.RequestProductEntity;
+import org.esnack24api.esnack24adminapi.community.dto.RequestAllergyListDTO;
 import org.esnack24api.esnack24adminapi.community.dto.RequestProductListDTO;
 import org.esnack24api.esnack24adminapi.community.repository.RequestProductRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class RequestProductService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
         product.setCpanswer(cpanswer);
+        product.setCpstatus(true);
         requestProductRepository.save(product);
     }
 
@@ -42,6 +44,11 @@ public class RequestProductService {
 
         product.setCpdelete(true);
         requestProductRepository.save(product);
+    }
+
+    public PageResponseDTO<RequestProductListDTO> RequestProductStatusList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        return requestProductRepository.getTFProductList(status, pageRequestDTO);
     }
 
 

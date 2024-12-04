@@ -27,4 +27,6 @@ public class RequestAllergyListDTO {
 
     private Timestamp camoddate;
 
+    private boolean castatus;
+
 }
