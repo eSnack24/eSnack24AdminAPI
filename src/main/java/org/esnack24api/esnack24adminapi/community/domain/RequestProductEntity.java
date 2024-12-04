@@ -33,4 +33,6 @@ public class RequestProductEntity {
 
     private boolean cpdelete;
 
+    private boolean cpstatus;
+
 }

@@ -31,6 +31,8 @@ public class RequestAllergyEntity {
 
     private Timestamp caregdate;
 
+    private boolean castatus;
+
     @UpdateTimestamp
     private Timestamp camoddate;
 

@@ -28,4 +28,6 @@ public class RequestProductListDTO {
 
     private boolean cpdelete;
 
+    private boolean cpstatus;
+
 }
