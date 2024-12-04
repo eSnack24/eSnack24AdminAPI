@@ -4,13 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
-import org.esnack24api.esnack24adminapi.common.page.PageRequest;
-import org.esnack24api.esnack24adminapi.common.page.PageResponse;
 import org.esnack24api.esnack24adminapi.product.dto.*;
 import org.esnack24api.esnack24adminapi.product.service.ProductService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
