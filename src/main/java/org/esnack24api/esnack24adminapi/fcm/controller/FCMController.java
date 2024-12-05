@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FCMController {
 
-    @Autowired
     private final FCMService fcmService;
-    @Autowired
+
     private AdminService adminService;
     // FCM 메시지 전송 엔드포인트
     @PostMapping("/send")

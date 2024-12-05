@@ -194,7 +194,9 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                             product.pcategory_ko,
                             product.price,
                             product.pqty,
-                            product.pfilename
+                            product.pfilename,
+                            product.pregdate,
+                            product.pmoddate
                     )
             );
 
