@@ -70,5 +70,12 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAdminWorkList(order_by, pageRequestDTO));
     }
 
+    @GetMapping("answerList/{admno}")
+    public ResponseEntity<PageResponseDTO<AdminAnswerListDTO>> adminAnswerList(
+            @PathVariable Long admno, PageRequestDTO pageRequestDTO) {
+
+        return ResponseEntity.ok(adminService.adminAnswerList(admno, pageRequestDTO));
+    }
+
 
 }

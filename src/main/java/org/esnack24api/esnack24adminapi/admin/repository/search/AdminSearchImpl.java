@@ -6,6 +6,7 @@ import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.admin.domain.AdminEntity;
 import org.esnack24api.esnack24adminapi.admin.domain.QAdminEntity;
+import org.esnack24api.esnack24adminapi.admin.dto.AdminAnswerListDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminListDTO;
 import org.esnack24api.esnack24adminapi.admin.dto.AdminWorkListDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
@@ -133,6 +134,46 @@ public class AdminSearchImpl extends QuerydslRepositorySupport implements AdminS
         long total = query.fetchCount();
 
         return PageResponseDTO.<AdminWorkListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<AdminAnswerListDTO> adminAnswerList(Long admno, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable =
+                PageRequest.of(pageRequestDTO.getPage() - 1,
+                        pageRequestDTO.getSize());
+
+        QAdminEntity admin = QAdminEntity.adminEntity;
+        QQNAEntity qna = QQNAEntity.qNAEntity;
+
+        JPQLQuery<AdminEntity> query = from(admin);
+        query.leftJoin(qna).on(qna.admin.eq(admin));
+
+        query.where(qna.qdelete.isFalse());
+        query.where(admin.admno.eq(admno));
+        query.where(qna.qno.gt(0));
+
+
+        this.getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<AdminAnswerListDTO> tupleQuery = query.select(
+                Projections.bean(AdminAnswerListDTO.class,
+                        qna.qno,
+                        qna.qtitle,
+                        qna.qregdate,
+                        qna.qmoddate
+                )
+        );
+
+        List<AdminAnswerListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<AdminAnswerListDTO>withAll()
                 .dtoList(dtoList)
                 .totalCount(total)
                 .pageRequestDTO(pageRequestDTO)

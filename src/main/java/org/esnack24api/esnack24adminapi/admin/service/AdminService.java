@@ -136,6 +136,11 @@ public class AdminService {
         return adminRepository.adminWorkList(order_by, pageRequestDTO);
     }
 
+    public PageResponseDTO<AdminAnswerListDTO> adminAnswerList(Long admno, PageRequestDTO pageRequestDTO) {
+
+        return adminRepository.adminAnswerList(admno, pageRequestDTO);
+    }
+
     public String updateToken(FCMTokenRequestDTO tokenRequest) {
         // 로그인한 관리자의 ID로 해당 관리자 찾기
         Optional<AdminEntity> adminOptional = adminRepository.findById(tokenRequest.getAdmno());
