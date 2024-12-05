@@ -24,4 +24,6 @@ public class UserDetailDTO {
 
     private List<String> allergyList;
 
+    private List<UserOrderDTO> orderList;
+
 }
