@@ -37,7 +37,7 @@ public class ReviewController {
     public ResponseEntity<String> deleteReview(@PathVariable Long rno) {
         log.info("deleteReview - rno: " + rno);
         reviewService.deleteReview(rno);
-        return ResponseEntity.noContent().build();  // 삭제 성공 시 204 No Content 반환
+        return ResponseEntity.noContent().build();
     }
 
 }

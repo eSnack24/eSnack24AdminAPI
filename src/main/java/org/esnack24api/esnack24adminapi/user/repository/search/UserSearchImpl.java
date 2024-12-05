@@ -6,18 +6,15 @@ import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
-import org.esnack24api.esnack24adminapi.user.domain.QAllergyUserEntity;
-import org.esnack24api.esnack24adminapi.user.domain.QUserAllergyEntity;
-import org.esnack24api.esnack24adminapi.user.domain.QUserEntity;
-import org.esnack24api.esnack24adminapi.user.domain.UserEntity;
+import org.esnack24api.esnack24adminapi.user.domain.*;
 import org.esnack24api.esnack24adminapi.user.dto.UserDTO;
 import org.esnack24api.esnack24adminapi.user.dto.UserDetailDTO;
+import org.esnack24api.esnack24adminapi.user.dto.UserOrderDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -89,15 +86,16 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
 
     @Override
     public UserDetailDTO getUserDetail(Long uno) {
-
         QUserEntity user = QUserEntity.userEntity;
         QUserAllergyEntity userAllergy = QUserAllergyEntity.userAllergyEntity;
         QAllergyUserEntity allergy = QAllergyUserEntity.allergyUserEntity;
+        QUserOrderEntity order = QUserOrderEntity.userOrderEntity;
 
-        JPQLQuery<Tuple> query = from(user)
-                .leftJoin(userAllergy).on(user.uno.eq(userAllergy.user.uno))
-                .leftJoin(allergy).on(userAllergy.allergy.ano.eq(allergy.ano))
+        // 기본 사용자 정보와 주문 데이터 쿼리
+        JPQLQuery<Tuple> mainQuery = from(user)
+                .leftJoin(order).on(user.uno.eq(order.user.uno))
                 .where(user.uno.eq(uno))
+                .orderBy(order.oregdate.desc())
                 .select(
                         user.uno,
                         user.username,
@@ -107,15 +105,28 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
                         user.ugender,
                         user.upw,
                         user.udelete,
-                        allergy.atitle_ko
+                        order.total_amount,
+                        order.currency,
+                        order.status,
+                        order.method,
+                        order.oregdate,
+                        order.ocompletedate
                 );
 
-        List<Tuple> result = query.fetch();
+        // 알레르기 데이터 쿼리
+        List<String> allergyList = from(userAllergy)
+                .join(allergy).on(userAllergy.allergy.ano.eq(allergy.ano))
+                .where(userAllergy.user.uno.eq(uno))
+                .select(allergy.atitle_ko)
+                .distinct()
+                .fetch();
 
+
+        List<Tuple> mainResult = mainQuery.fetch();
         UserDetailDTO userDetail = null;
-        List<String> allergyList = new ArrayList<>();
+        List<UserOrderDTO> orderList = new ArrayList<>();
 
-        for (Tuple row : result) {
+        for (Tuple row : mainResult) {
             if (userDetail == null) {
                 userDetail = new UserDetailDTO();
                 userDetail.setUno(row.get(user.uno));
@@ -127,16 +138,27 @@ public class UserSearchImpl extends QuerydslRepositorySupport implements UserSea
                 userDetail.setUpw(row.get(user.upw));
             }
 
-            String allergyTitle = row.get(allergy.atitle_ko);
-            if (allergyTitle != null) {
-                allergyList.add(allergyTitle);
+            if (row.get(order.total_amount) != null) {
+                UserOrderDTO userOrder = new UserOrderDTO();
+                userOrder.setTotal_amount(row.get(order.total_amount));
+                userOrder.setCurrency(row.get(order.currency));
+                userOrder.setStatus(row.get(order.status));
+                userOrder.setMethod(row.get(order.method));
+                userOrder.setOregdate(row.get(order.oregdate));
+                userOrder.setOcompletedate(row.get(order.ocompletedate));
+                orderList.add(userOrder);
             }
         }
 
-        userDetail.setAllergyList(allergyList);
+        if (userDetail != null) {
+            userDetail.setAllergyList(allergyList);
+            userDetail.setOrderList(orderList);
+        }
 
         return userDetail;
     }
+
+
 
 
 }

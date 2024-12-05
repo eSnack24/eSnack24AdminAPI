@@ -4,11 +4,15 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.esnack24api.esnack24adminapi.common.dto.PageRequestDTO;
 import org.esnack24api.esnack24adminapi.common.dto.PageResponseDTO;
+import org.esnack24api.esnack24adminapi.community.domain.QRequestAllergyEntity;
 import org.esnack24api.esnack24adminapi.community.domain.QRequestProductEntity;
+import org.esnack24api.esnack24adminapi.community.domain.RequestAllergyEntity;
 import org.esnack24api.esnack24adminapi.community.domain.RequestProductEntity;
+import org.esnack24api.esnack24adminapi.community.dto.RequestAllergyListDTO;
 import org.esnack24api.esnack24adminapi.community.dto.RequestProductListDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -30,7 +34,7 @@ public class RequestProductSearchImpl extends QuerydslRepositorySupport implemen
 
         query.where(requestProduct.cpno.gt(0)
                 .and(requestProduct.cpdelete.eq(false)))
-                .orderBy(requestProduct.cpno.desc());;
+                .orderBy(requestProduct.cpno.desc());
 
         this.getQuerydsl().applyPagination(pageable, query);
 
@@ -82,6 +86,51 @@ public class RequestProductSearchImpl extends QuerydslRepositorySupport implemen
                 .build();
     }
 
+    @Override
+    public PageResponseDTO<RequestProductListDTO> getTFProductList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("cpno").ascending());
+
+        QRequestProductEntity requestProduct = QRequestProductEntity.requestProductEntity;
+
+        JPQLQuery<RequestProductEntity> query = from(requestProduct);
+
+        query.where(requestProduct.cpno.gt(0)
+                .and(requestProduct.cpdelete.eq(false)))
+                .orderBy(requestProduct.cpno.desc());
+
+        if (status != null) {
+            query.where(requestProduct.cpstatus.eq(status));
+        }
+
+        this.getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<RequestProductListDTO> tupleQuery = query.select(
+                Projections.bean(RequestProductListDTO.class,
+                        requestProduct.cpno,
+                        requestProduct.cptitle,
+                        requestProduct.cpproduct,
+                        requestProduct.cpanswer,
+                        requestProduct.cpdelete,
+                        requestProduct.cpregdate,
+                        requestProduct.cpmoddate,
+                        requestProduct.cpstatus
+                )
+        );
+
+        List<RequestProductListDTO> dtoList = tupleQuery.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<RequestProductListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
 
 
 }

@@ -44,5 +44,12 @@ public class RequestAllergyController {
         return ResponseEntity.ok("글이 성공적으로 삭제 되었습니다.");
     }
 
+    @GetMapping("statuslist/{castatus}")
+    public ResponseEntity<PageResponseDTO<RequestAllergyListDTO>> getAllergyStatusList(
+            @PathVariable("castatus") boolean castatus, PageRequestDTO pageRequestDTO) {
+
+        return ResponseEntity.ok(requestAllergyService.RequestAllergyStatusList(castatus, pageRequestDTO));
+    }
+
 
 }

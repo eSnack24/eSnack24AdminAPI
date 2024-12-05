@@ -31,6 +31,7 @@ public class RequestAllergyService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 알러지 입니다."));
 
         allergy.setCaanswer(caanswer);
+        allergy.setCastatus(true);
         requestAllergyRepository.save(allergy);
     }
 
@@ -40,5 +41,10 @@ public class RequestAllergyService {
 
         allergy.setCadelete(true);
         requestAllergyRepository.save(allergy);
+    }
+
+    public PageResponseDTO<RequestAllergyListDTO> RequestAllergyStatusList(Boolean status, PageRequestDTO pageRequestDTO) {
+
+        return requestAllergyRepository.getTFAllergyList(status, pageRequestDTO);
     }
 }
