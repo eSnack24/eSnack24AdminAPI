@@ -48,6 +48,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         query.offset((long) (page - 1) * size)
                 .limit(size);
 
+        query.orderBy(product.pmoddate.desc());
+
         JPQLQuery<ProductListDTO> dtoQuery = query.select(
                 Projections.bean(ProductListDTO.class,
                         product.pno,
@@ -107,6 +109,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         query.offset((long) (page - 1) * size)
                 .limit(size);
+
+        query.orderBy(product.pmoddate.desc());
 
         List<ProductAllergyListDTO> list = query.fetch();
         long totalCount = query.fetchCount();
@@ -181,6 +185,9 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 query.where(product.pcategory_ko.eq(productSearchDTO.getPcategory_ko()));
             }
 
+            // 내림차순(최신순)으로 출력
+            query.orderBy(product.pmoddate.desc());
+
             // 페이징 처리
             int page = productSearchDTO.getPage();
             int size = productSearchDTO.getSize();
@@ -224,8 +231,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
             JPQLQuery<ProductEntity> query;
 
-            if (allergyIds != null && !allergyIds.isEmpty()) {
-                // 알레르기 ID가 있는 경우
+            if (allergyIds != null && !allergyIds.isEmpty() && !allergyIds.contains(-1L)) {
+                // 알레르기 ID가 있는 경우 (특정 알레르기 제품 검색)
                 JPQLQuery<Long> subQuery = JPAExpressions.select(productAllergy.product.pno)
                         .from(productAllergy)
                         .where(productAllergy.allergy.ano.in(allergyIds))
@@ -238,14 +245,21 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                         .where(product.pno.in(subQuery))
                         .where(product.pdelete.eq(false))
                         .groupBy(product.pno);
-            } else {
-                // 알레르기 ID가 없으면 알레르기 정보가 없는 제품만 조회
+            } else if (allergyIds != null && allergyIds.contains(-1L)) {
+                // "알레르기 유발성분 없음" 선택 시
                 query = from(product)
                         .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
                         .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
                         .where(product.pdelete.eq(false))
                         .groupBy(product.pno)
-                        .having(productAllergy.allergy.ano.count().eq(0L)); // 알레르기 정보가 없는 제품만 선택
+                        .having(productAllergy.allergy.ano.count().eq(0L));
+            } else {
+                // 아무것도 선택하지 않은 경우 모든 제품 조회
+                query = from(product)
+                        .leftJoin(productAllergy).on(product.pno.eq(productAllergy.product.pno))
+                        .leftJoin(allergy).on(productAllergy.allergy.ano.eq(allergy.ano))
+                        .where(product.pdelete.eq(false))
+                        .groupBy(product.pno);
             }
 
             // 제품명 검색 조건 추가
@@ -265,6 +279,9 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                     product.pmoddate,
                     Expressions.stringTemplate("COALESCE(group_concat({0}), '알레르기 유발성분 없음')", allergy.atitle_ko).as("allergyInfo")
             ));
+
+            // 내림차순(최신순)으로 출력
+            query.orderBy(product.pmoddate.desc());
 
             // 페이징 처리
             dtoQuery.offset((long) (page - 1) * size).limit(size);
