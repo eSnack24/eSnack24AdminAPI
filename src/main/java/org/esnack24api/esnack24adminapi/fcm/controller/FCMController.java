@@ -14,13 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/fcm")
 @RequiredArgsConstructor
 public class FCMController {
-<<<<<<< HEAD
-=======
 
->>>>>>> 48923ea24e3d2ed997a6ab3f9c59d8b5d9338965
-    @Autowired
     private final FCMService fcmService;
-    @Autowired
+
     private AdminService adminService;
     // FCM 메시지 전송 엔드포인트
     @PostMapping("/send")
