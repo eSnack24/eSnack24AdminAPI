@@ -8,9 +8,10 @@ import java.sql.Timestamp;
 public class ReviewListDTO {
 
     private Long rno;
-    private String ptitle_ko; // product
-    private String uemail; // user
+    private String ptitle_ko;
+    private String uemail;
     private String rcontent;
+    private boolean rdelete;
 
     private int rstar;
     private String rimage;

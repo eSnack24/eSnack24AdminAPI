@@ -1,7 +1,7 @@
 package org.esnack24api.esnack24adminapi.graph.service;
 
 import lombok.RequiredArgsConstructor;
-import org.esnack24api.esnack24adminapi.graph.repository.user.GraphProductRepository;
+import org.esnack24api.esnack24adminapi.graph.repository.product.GraphProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,5 +23,21 @@ public class GraphProductService {
 
     public List<Object[]> getProductAllergyDistribution() {
         return graphProductRepository.productAllergyDistribution();
+    }
+
+    public List<Object[]> getProductStockStatus() {
+        return graphProductRepository.ProductStockStatus();
+    }
+
+    public List<Object[]> getProductStarCounts() {
+        return graphProductRepository.productStarCount();
+    }
+
+    public List<Object[]> getProductCartCounts() {
+        return graphProductRepository.productCartCount();
+    }
+
+    public List<Object[]> getProductOrderCounts() {
+        return graphProductRepository.productOrderCount();
     }
 }
