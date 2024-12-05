@@ -28,26 +28,15 @@ public class ExchangeRateService {
 
         //true = 같은 값 있음, false = 값은 값 없음
 
-        if(exchangeRateRepository.findByBaseCurrency(checkRateDTO.getBaseCurrency()).isPresent()) {
-
-            ExchangeRateEntity exchangeRate = exchangeRateRepository.findByBaseCurrency(checkRateDTO.getBaseCurrency()).get();
-
-            if(exchangeRate.getTargetCurrency().equals(checkRateDTO.getTargetCurrency())) return true;
-
-            return false;
-        }
-
-        return false;
+        return exchangeRateRepository.findByTargetCurrency(checkRateDTO.getTargetCurrency()).isPresent();
     }
 
     public String createRate(CreateRateDTO createRateDTO) {
 
-        String upperBase = createRateDTO.getBaseCurrency().toUpperCase();
         String upperTarget = createRateDTO.getTargetCurrency().toUpperCase();
 
         CheckRateDTO checkRateDTO = new CheckRateDTO();
 
-        checkRateDTO.setBaseCurrency(upperBase);
         checkRateDTO.setTargetCurrency(upperTarget);
 
         if(!checkUnique(checkRateDTO)) {
@@ -57,7 +46,7 @@ public class ExchangeRateService {
 
             ExchangeRateEntity exchangeRate = ExchangeRateEntity.builder()
                     .rate(createRateDTO.getRate())
-                    .baseCurrency(upperBase)
+                    .baseCurrency("KRW")
                     .targetCurrency(upperTarget)
                     .erupdate(Timestamp.from(Instant.now()))
                     .admin(admin)

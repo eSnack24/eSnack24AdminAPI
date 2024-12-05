@@ -18,7 +18,10 @@ public class ExchangeRateController {
     private final ExchangeRateService exchangeRateService;
 
     @GetMapping("check")
-    public ResponseEntity<Boolean> checkExchangeRate(@RequestBody CheckRateDTO checkRateDTO) {
+    public ResponseEntity<Boolean> checkExchangeRate(@RequestParam String targetCurrency) {
+
+        CheckRateDTO checkRateDTO = new CheckRateDTO();
+        checkRateDTO.setTargetCurrency(targetCurrency);
 
         return ResponseEntity.ok(exchangeRateService.checkUnique(checkRateDTO));
     }

@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 @Data
 public class CreateRateDTO {
 
-    private String baseCurrency;
-
     private String targetCurrency;
 
     private Long admno;
