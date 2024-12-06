@@ -54,6 +54,7 @@ public class CustomSecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.setAllowedOriginPatterns(List.of("*")); // 어디서든 허락
+        corsConfiguration.setAllowedOriginPatterns(List.of("https://esnack24admin.store"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "FETCH", "HEAD", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         corsConfiguration.setAllowCredentials(true);
