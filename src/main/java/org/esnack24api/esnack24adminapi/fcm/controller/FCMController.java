@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 @RestController
-@RequestMapping("/api/fcm")
+@RequestMapping("/admin/api/v1/fcm")
 @RequiredArgsConstructor
 public class FCMController {
 
     private final FCMService fcmService;
 
-    private AdminService adminService;
+    private final AdminService adminService;
     // FCM 메시지 전송 엔드포인트
     @PostMapping("/send")
     public ResponseEntity<String> sendNotification(@RequestBody FCMRequestDTO fcmRequestDTO) {
