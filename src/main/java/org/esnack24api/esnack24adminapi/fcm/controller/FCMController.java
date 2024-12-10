@@ -6,13 +6,12 @@ import org.esnack24api.esnack24adminapi.fcm.dto.FCMRequestDTO;
 import org.esnack24api.esnack24adminapi.fcm.service.FCMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/admin/api/v1/fcm")
 @RequiredArgsConstructor
+@CrossOrigin("https://esnack24.store")
 public class FCMController {
 
     private final FCMService fcmService;
