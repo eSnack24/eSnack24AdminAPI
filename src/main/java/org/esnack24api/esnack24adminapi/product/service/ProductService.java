@@ -90,15 +90,18 @@ public class ProductService {
             if(productOptional.isPresent()) {
                 ProductEntity productEntity = productOptional.get();
 
-                // 이미지가 변경된 경우
+                // 이미지 변경 여부 확인
                 if (productEditDTO.getPfilename() != null && !productEditDTO.getPfilename().isEmpty()) {
-                    // 기존 이미지 삭제
+                    // 새 이미지 업로드한 경우에만 기존 이미지 삭제 및 새 이미지 처리
                     String oldFileName = productEntity.getPfilename();
                     deleteExistingFiles(oldFileName);
 
-                    // 새 이미지 업로드
                     String savedFileName = imageUploadService.uploadBase64File(productEditDTO.getPfilename());
-                    productEntity.setPfilename(savedFileName);
+
+                    // null 체크 추가
+                    if (savedFileName != null) {
+                        productEntity.setPfilename(savedFileName);
+                    }
                 }
 
                 // 기본 정보 설정
@@ -127,7 +130,6 @@ public class ProductService {
 
                 productRepository.save(productEntity);
 
-                // 알레르기 정보 업데이트
                 productAllergyService.updateProductAllergies(productEntity, productEditDTO.getAllergySelectList());
 
                 return "상품이 수정되었습니다.";
