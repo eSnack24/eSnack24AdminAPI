@@ -20,9 +20,15 @@ public class ImageUploadService {
     private final S3Uploader s3Uploader;
 
     public String uploadBase64File(String base64File) throws IOException {
+        // 이미지 파일이 없는 경우 null 또는 기존 파일명 반환
+        if (base64File == null || base64File.isEmpty()) {
+            return null;
+        }
+
         String base64Data = base64File;
         String fileExtension = "";
 
+        // data:image/...;base64, 접두사 처리
         if (base64Data.contains(",")) {
             String[] parts = base64Data.split(",");
             String mimeType = parts[0].split(";")[0].split(":")[1];
@@ -30,6 +36,7 @@ public class ImageUploadService {
             base64Data = parts[1];
         }
 
+        // 공백 및 줄바꿈 문자 제거
         base64Data = base64Data.replaceAll("\\s+", "");
 
         // UUID 파일명 생성
